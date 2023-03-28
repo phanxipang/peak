@@ -1,5 +1,5 @@
 
-# This is my package atlas-pool
+# Atlas Pool
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Github Actions][ico-gh-actions]][link-gh-actions]
@@ -7,7 +7,7 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Software License][ico-license]](LICENSE.md)
 
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
+A powerful tool that allows you to send multiple HTTP requests simultaneously.
 
 ## Installation
 
@@ -19,10 +19,7 @@ composer require jenky/atlas-pool
 
 ## Usage
 
-```php
-$atlas-pool = new Jenky\Atlas\\Pool();
-echo $atlas-pool->echoPhrase('Hello, Jenky!');
-```
+See the [documentation](https://jenky.github.io/atlas) usage instructions.
 
 ## Testing
 
