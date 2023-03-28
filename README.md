@@ -19,7 +19,7 @@ composer require jenky/atlas-pool
 
 ## Usage
 
-See the [documentation](https://jenky.github.io/atlas) usage instructions.
+See the [documentation](https://jenky.github.io/atlas) for detailed installation and usage instructions.
 
 ## Testing
 
