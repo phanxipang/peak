@@ -10,10 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class PoolTest extends TestCase
 {
-    /**
-     * @var PoolableConnector
-     */
-    private $connector;
+    private EchoConnector $connector;
 
     protected function setUp(): void
     {
@@ -35,7 +32,7 @@ class PoolTest extends TestCase
         $this->assertCount(3, $responses);
     }
 
-    public function test_amphp_pool(): void
+    public function test_amp_pool(): void
     {
         $connector = $this->connector->withClient(new MockClient());
 
