@@ -1,0 +1,81 @@
+{
+    "name": "jenky/atlas-pool",
+    "description": "Send multiple requests in parallel for Atlas",
+    "keywords": [
+        "jenky",
+        "atlas",
+        "pool",
+        "concurrent-requests",
+        "parallel-requests",
+        "async",
+        "await"
+    ],
+    "homepage": "https://github.com/jenky/atlas-pool",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lynh",
+            "email": "author@domain.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "amphp/parallel": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.10",
+        "guzzlehttp/guzzle": "^7.5",
+        "jenky/atlas": "1.x-dev",
+        "jenky/atlas-mock-client": "^1.0",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.0",
+        "react/async": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jenky\\Atlas\\Pool\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jenky\\Atlas\\Pool\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "analyse": [
+            "vendor/bin/phpstan analyse"
+        ],
+        "cs": [
+            "vendor/bin/php-cs-fixer fix"
+        ],
+        "test": [
+            "vendor/bin/phpunit"
+        ],
+        "coverage": [
+            "vendor/bin/phpunit --coverage"
+        ],
+        "check": [
+            "@cs --dry-run",
+            "@analyse",
+            "@test"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    },
+    "suggest": {
+        "amphp/parallel": "Require to send request in parallel",
+        "react/async": "Require to send request in parallel"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
