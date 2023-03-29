@@ -16,11 +16,11 @@ final class AmpPool implements PoolInterface
 
     public function queue($key, callable $request): void
     {
-        $rq = $request instanceof \Closure
+        $request = $request instanceof \Closure
             ? $request
             : \Closure::fromCallable($request);
 
-        $this->requests[$key] = Amp\async($rq);
+        $this->requests[$key] = Amp\async($request);
     }
 
     public function send(): array
