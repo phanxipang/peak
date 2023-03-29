@@ -2,8 +2,11 @@
 
 namespace Jenky\Atlas\Pool\Tests;
 
+use Jenky\Atlas\Connector;
+use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Mock\MockClient;
 use Jenky\Atlas\Pool\AmpPool;
+use Jenky\Atlas\Pool\Pool;
 use Jenky\Atlas\Pool\ReactPool;
 use Jenky\Atlas\Response;
 use PHPUnit\Framework\TestCase;
@@ -21,51 +24,42 @@ class PoolTest extends TestCase
 
     public function test_pool(): void
     {
-        $connector = $this->connector->withClient(new MockClient());
-
-        $responses = $connector->pool([
+        $responses = (new Pool($this->connector))->send([
             new EchoRequest(),
             new EchoRequest('post'),
             new EchoRequest('put'),
-        ])->send();
+        ]);
 
         $this->assertCount(3, $responses);
+
+        $this->assertTrue(true);
     }
 
     public function test_amp_pool(): void
     {
         $connector = $this->connector->withClient(new MockClient());
 
-        $pool = $connector->pool([
-            function () use ($connector): Response {
-                return $connector->send(new EchoRequest());
-            },
-            function () use ($connector): Response {
-                return $connector->send(new EchoRequest());
-            },
-            function () use ($connector): Response {
-                return $connector->send(new EchoRequest());
-            },
-        ], $amp = new AmpPool());
+        $responses = (new Pool($connector, new AmpPool()))->send([
+            fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
+            fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
+            fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
+        ]);
 
-        $this->assertSame($amp, $pool);
-        $this->assertCount(3, $pool->send());
+        $this->assertCount(3, $responses);
     }
 
     public function test_react_pool(): void
     {
         $connector = $this->connector->withClient(new MockClient());
 
-        $pool = $connector->pool([
+        $pool = (new Pool($connector, new ReactPool()));
+        $responses = $pool->send([
             'a' => new EchoRequest(),
             'b' => new EchoRequest(),
-            'c' => function () use ($connector): Response {
-                return $connector->send(new EchoRequest());
-            },
-        ], $react = new ReactPool());
+            'c' => fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
+        ]);
 
-        $this->assertSame($react, $pool);
-        $this->assertCount(3, $responses = $pool->send());
+        $this->assertCount(3, $responses);
 
         $this->assertArrayHasKey('a', $responses);
         $this->assertArrayHasKey('b', $responses);

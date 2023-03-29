@@ -14,13 +14,13 @@ final class AmpPool implements PoolInterface
      */
     private array $requests = [];
 
-    public function queue($key, callable $request): void
+    public function queue($key, callable $request, mixed ...$args): void
     {
         $request = $request instanceof \Closure
             ? $request
             : \Closure::fromCallable($request);
 
-        $this->requests[$key] = Amp\async($request);
+        $this->requests[$key] = Amp\async($request, ...$args);
     }
 
     public function send(): array

@@ -13,9 +13,11 @@ final class ReactPool implements PoolInterface
      */
     private array $requests = [];
 
-    public function queue($key, callable $request): void
+    public function queue($key, callable $request, mixed ...$args): void
     {
-        $this->requests[$key] = Async\async($request);
+        $this->requests[$key] = Async\async(function () use ($args, $request) {
+            return Async\await(Async\async($request)(...$args));
+        });
     }
 
     public function send(): array

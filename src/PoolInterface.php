@@ -10,9 +10,9 @@ interface PoolInterface
      * Put the request to the queue to be sent later.
      *
      * @param  array-key $key
-     * @param  callable(): \Jenky\Atlas\Response $request
+     * @param  callable(mixed ...$args): \Jenky\Atlas\Response $request
      */
-    public function queue($key, callable $request): void;
+    public function queue($key, callable $request, mixed ...$args): void;
 
     /**
      * Send concurrent requests.

@@ -30,7 +30,8 @@
         "jenky/atlas-mock-client": "^1.0",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.0",
-        "react/async": "^4.0"
+        "react/async": "^4.0",
+        "symfony/var-dumper": "^6.2"
     },
     "autoload": {
         "psr-4": {
