@@ -27,16 +27,21 @@ final class Pool
      */
     public function send(iterable $requests): array
     {
+        $client = new Client\ReactClient;
+        $connector = $this->connector;
+            // ->withClient($client);
+
         foreach ($requests as $key => $request) {
             if ($request instanceof Request) {
-                $promise = fn (ConnectorInterface $connector): Response => $connector->send($request);
+                $promise = fn (): Response => $connector->send($request);
             } elseif (is_callable($request)) {
                 $promise = $request;
             } else {
                 throw new \InvalidArgumentException('Each value of the iterator must be a Jenky\Atlas\Request or a \Closure that returns a Jenky\Atlas\Response object.');
             }
 
-            $this->delegate->queue($key, $promise, clone $this->connector); // @phpstan-ignore-line
+            // $promise = fn () => $client->sendRequest(\Jenky\Atlas\Util::request($request));
+            $this->delegate->queue($key, $promise); // @phpstan-ignore-line
         }
 
         return $this->delegate->send();

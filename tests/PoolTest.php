@@ -5,6 +5,7 @@ namespace Jenky\Atlas\Pool\Tests;
 use Jenky\Atlas\Connector;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Mock\MockClient;
+use Jenky\Atlas\NullConnector;
 use Jenky\Atlas\Pool\AmpPool;
 use Jenky\Atlas\Pool\Pool;
 use Jenky\Atlas\Pool\ReactPool;
@@ -31,8 +32,6 @@ class PoolTest extends TestCase
         ]);
 
         $this->assertCount(3, $responses);
-
-        $this->assertTrue(true);
     }
 
     public function test_amp_pool(): void
@@ -68,5 +67,19 @@ class PoolTest extends TestCase
         $this->assertInstanceOf(Response::class, $responses['a']);
         $this->assertInstanceOf(Response::class, $responses['b']);
         $this->assertInstanceOf(Response::class, $responses['c']);
+    }
+
+    public function test_sending_lots_of_requests(): void
+    {
+        $connector = new NullConnector();
+
+        for ($i=0; $i < 100; $i++) {
+            $requests[] = new AkamaiTileRequest($i);
+        }
+
+        $responses = (new Pool($connector))->send($requests);
+
+        $this->assertCount(100, $responses);
+        // $this->assertInstanceOf(Response::class, $responses[0]);
     }
 }

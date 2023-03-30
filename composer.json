@@ -23,6 +23,7 @@
         "php": "^8.1"
     },
     "require-dev": {
+        "amphp/http-client": "^0.7.0",
         "amphp/parallel": "^2.1",
         "friendsofphp/php-cs-fixer": "^3.10",
         "guzzlehttp/guzzle": "^7.5",
@@ -31,6 +32,7 @@
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.0",
         "react/async": "^4.0",
+        "react/http": "^1.8",
         "symfony/var-dumper": "^6.2"
     },
     "autoload": {
