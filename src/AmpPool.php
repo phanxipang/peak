@@ -6,25 +6,34 @@ namespace Jenky\Atlas\Pool;
 
 use Amp;
 use Amp\Future;
+use Jenky\Atlas\Contracts\ConnectorInterface;
+use Jenky\Atlas\Request;
+use Jenky\Atlas\Response;
 
 final class AmpPool implements PoolInterface
 {
-    /**
-     * @var array<array-key, \Amp\Future>
-     */
-    private array $requests = [];
-
-    public function queue($key, callable $request, mixed ...$args): void
+    public function __construct(private ConnectorInterface $connector)
     {
-        $request = $request instanceof \Closure
-            ? $request
-            : \Closure::fromCallable($request);
-
-        $this->requests[$key] = Amp\async($request, ...$args);
     }
 
-    public function send(): array
+    public function send(iterable $requests): array
     {
-        return Future\awaitAll($this->requests)[1] ?? [];
+        $promises = function () use ($requests) {
+            foreach ($requests as $key => $request) {
+                if ($request instanceof Request) {
+                    $promise = fn (): Response => $this->connector->send($request);
+                } elseif (is_callable($request)) {
+                    $promise = $request instanceof \Closure
+                        ? $request
+                        : \Closure::fromCallable($request);
+                } else {
+                    throw new \InvalidArgumentException('Each value of the iterator must be a Jenky\Atlas\Request or a \Closure that returns a Jenky\Atlas\Response object.');
+                }
+
+                yield $key => Amp\async($promise);
+            }
+        };
+
+        return Future\awaitAll($promises())[1] ?? [];
     }
 }

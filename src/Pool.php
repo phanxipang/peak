@@ -4,55 +4,30 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool;
 
+use GuzzleHttp\ClientInterface;
 use Jenky\Atlas\Contracts\ConnectorInterface;
-use Jenky\Atlas\Request;
-use Jenky\Atlas\Response;
 
-final class Pool
+final class Pool implements PoolInterface
 {
     private PoolInterface $delegate;
 
-    public function __construct(
-        private ConnectorInterface $connector,
-        ?PoolInterface $pool = null
-    ) {
-        $this->delegate = $pool ?: $this->defaultPool();
+    public function __construct(ConnectorInterface $connector, ?PoolInterface $pool = null)
+    {
+        $this->delegate = $pool ?: $this->defaultPool($connector);
     }
 
-    /**
-     * Send concurrent requests.
-     *
-     * @param  iterable<\Jenky\Atlas\Request|callable(ConnectorInterface): \Jenky\Atlas\Response> $requests
-     * @return array<array-key, \Jenky\Atlas\Response>
-     */
     public function send(iterable $requests): array
     {
-        $client = new Client\ReactClient;
-        $connector = $this->connector;
-            // ->withClient($client);
-
-        foreach ($requests as $key => $request) {
-            if ($request instanceof Request) {
-                $promise = fn (): Response => $connector->send($request);
-            } elseif (is_callable($request)) {
-                $promise = $request;
-            } else {
-                throw new \InvalidArgumentException('Each value of the iterator must be a Jenky\Atlas\Request or a \Closure that returns a Jenky\Atlas\Response object.');
-            }
-
-            // $promise = fn () => $client->sendRequest(\Jenky\Atlas\Util::request($request));
-            $this->delegate->queue($key, $promise); // @phpstan-ignore-line
-        }
-
-        return $this->delegate->send();
+        return $this->delegate->send($requests);
     }
 
     /**
      * Get default pool instance.
      */
-    private function defaultPool(): PoolInterface
+    private function defaultPool(ConnectorInterface $connector): PoolInterface
     {
         $candidates = [
+            // GuzzlePool::class => fn (): bool => $connector->client() instanceof ClientInterface,
             ReactPool::class => fn (): bool => function_exists('React\\Async\\async')
                 && function_exists('React\\Async\\await')
                 && function_exists('React\\Async\\parallel'),
@@ -62,7 +37,7 @@ final class Pool
 
         foreach ($candidates as $pool => $condition) {
             if ($condition()) {
-                return new $pool();
+                return new $pool($connector);
             }
         }
 

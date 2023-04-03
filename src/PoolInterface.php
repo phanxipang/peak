@@ -7,17 +7,10 @@ namespace Jenky\Atlas\Pool;
 interface PoolInterface
 {
     /**
-     * Put the request to the queue to be sent later.
-     *
-     * @param  array-key $key
-     * @param  callable(mixed ...$args): \Jenky\Atlas\Response $request
-     */
-    public function queue($key, callable $request, mixed ...$args): void;
-
-    /**
      * Send concurrent requests.
      *
-     * @return array<array-key, \Jenky\Atlas\Response>
+     * @param  iterable<callable> $requests
+     * @return array<array-key, mixed>
      */
-    public function send(): array;
+    public function send(iterable $requests): array;
 }

@@ -2,11 +2,10 @@
 
 namespace Jenky\Atlas\Pool\Tests;
 
-use Jenky\Atlas\Connector;
-use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Mock\MockClient;
 use Jenky\Atlas\NullConnector;
 use Jenky\Atlas\Pool\AmpPool;
+use Jenky\Atlas\Pool\Client\ReactClient;
 use Jenky\Atlas\Pool\Pool;
 use Jenky\Atlas\Pool\ReactPool;
 use Jenky\Atlas\Response;
@@ -38,10 +37,10 @@ class PoolTest extends TestCase
     {
         $connector = $this->connector->withClient(new MockClient());
 
-        $responses = (new Pool($connector, new AmpPool()))->send([
-            fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
-            fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
-            fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
+        $responses = (new AmpPool($connector))->send([
+            fn (): Response => $connector->send(new EchoRequest()),
+            fn (): Response => $connector->send(new EchoRequest()),
+            fn (): Response => $connector->send(new EchoRequest()),
         ]);
 
         $this->assertCount(3, $responses);
@@ -51,11 +50,11 @@ class PoolTest extends TestCase
     {
         $connector = $this->connector->withClient(new MockClient());
 
-        $pool = (new Pool($connector, new ReactPool()));
+        $pool = new ReactPool($connector);
         $responses = $pool->send([
             'a' => new EchoRequest(),
             'b' => new EchoRequest(),
-            'c' => fn (ConnectorInterface $connector): Response => $connector->send(new EchoRequest()),
+            'c' => fn (): Response => $connector->send(new EchoRequest()),
         ]);
 
         $this->assertCount(3, $responses);
@@ -69,6 +68,23 @@ class PoolTest extends TestCase
         $this->assertInstanceOf(Response::class, $responses['c']);
     }
 
+    public function test_react_client_pool(): void
+    {
+        $connector = (new NullConnector())->withClient(new ReactClient());
+
+        $requests = function (int $total) use ($connector) {
+            for ($i = 0; $i < $total; $i++) {
+                yield fn () => $connector->send(
+                    new AkamaiTileRequest($i)
+                );
+            }
+        };
+
+        $responses = (new Pool($connector))->send($requests(30));
+        $this->assertCount(30, $responses);
+        $this->assertInstanceOf(Response::class, $responses[0]);
+    }
+
     public function test_sending_lots_of_requests(): void
     {
         $connector = new NullConnector();
@@ -78,8 +94,7 @@ class PoolTest extends TestCase
         }
 
         $responses = (new Pool($connector))->send($requests);
-
         $this->assertCount(100, $responses);
-        // $this->assertInstanceOf(Response::class, $responses[0]);
+        $this->assertInstanceOf(Response::class, $responses[0]);
     }
 }
