@@ -34,6 +34,7 @@ final class AmpPool implements PoolInterface
             }
         };
 
+        // @phpstan-ignore-next-line
         return Future\awaitAll($promises())[1] ?? [];
     }
 }
