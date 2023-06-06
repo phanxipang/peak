@@ -70,7 +70,7 @@ class PoolTest extends TestCase
 
     public function test_react_client_pool(): void
     {
-        $connector = (new NullConnector())->withClient(new ReactClient());
+        $connector = (new NullConnector());
 
         $requests = function (int $total) use ($connector) {
             for ($i = 0; $i < $total; $i++) {
@@ -80,8 +80,8 @@ class PoolTest extends TestCase
             }
         };
 
-        $responses = (new Pool($connector))->send($requests(30));
-        $this->assertCount(30, $responses);
+        $responses = (new Pool($connector))->send($requests(100));
+        $this->assertCount(100, $responses);
         $this->assertInstanceOf(Response::class, $responses[0]);
     }
 

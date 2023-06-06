@@ -8,6 +8,7 @@ use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
 use React\Async;
+use React\Promise;
 
 final class ReactPool implements PoolInterface
 {
@@ -17,23 +18,27 @@ final class ReactPool implements PoolInterface
 
     public function send(iterable $requests): array
     {
-        /* $promises = Async\coroutine(function () use ($requests) {
+        /* $promise = Async\coroutine(function ($requests) {
+            $promises = [];
             foreach ($requests as $key => $request) {
                 if ($request instanceof Request) {
-                    $promise = fn (): Response => $this->connector->send($request);
+                    $fetch = fn (): Response => $this->connector->send($request);
                 } elseif (is_callable($request)) {
-                    $promise = $request;
+                    $fetch = $request;
                 } else {
                     throw new \InvalidArgumentException('Each value of the iterator must be a Jenky\Atlas\Request or a \Closure that returns a Jenky\Atlas\Response object.');
                 }
 
-                yield $key => Async\async($promise)();
+                // yield $key => Async\async($fetch);
+                $promises[$key] = Async\async($fetch);
+
             }
-        });
+            return Async\parallel($promises);
+        }, $requests);
 
-        return Async\await($promises); */
+        return Async\await($promise); */
 
-        $promises = function () use ($requests) {
+        $promises = function ($requests) {
             foreach ($requests as $key => $request) {
                 if ($request instanceof Request) {
                     $promise = fn (): Response => $this->connector->send($request);
@@ -48,7 +53,7 @@ final class ReactPool implements PoolInterface
         };
 
         return Async\await(
-            Async\parallel($promises()) // @phpstan-ignore-line
+            Async\parallel($promises($requests)) // @phpstan-ignore-line
         );
     }
 }
