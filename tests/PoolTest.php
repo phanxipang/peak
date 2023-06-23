@@ -80,7 +80,7 @@ class PoolTest extends TestCase
             }
         };
 
-        $responses = (new Pool($connector))->send($requests(100));
+        $responses = (new ReactPool($connector))->send($requests(100));
         $this->assertCount(100, $responses);
         $this->assertInstanceOf(Response::class, $responses[0]);
     }
