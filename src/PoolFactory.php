@@ -18,7 +18,7 @@ final class PoolFactory
             return new Guzzle\Pool($connector);
         }
 
-        throw new UnsupportedException('Pool feature is not supported for current client '.get_debug_type($client));
+        throw new UnsupportedException('Pool feature is not supported for current client '.get_class($client));
     }
 
     /*

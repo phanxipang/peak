@@ -38,7 +38,7 @@ final class Pool implements PoolInterface
         $client = $connector->client();
 
         if (! $client instanceof ClientInterface) {
-            throw new \InvalidArgumentException('Client must be Guzzle Client.');
+            throw new \InvalidArgumentException(sprintf('Client must be Guzzle Client. Instance of %s given.', get_class($client)));
         }
 
         $this->connector = $connector;
