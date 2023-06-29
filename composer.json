@@ -28,8 +28,7 @@
         "jenky/atlas": "1.x-dev",
         "jenky/atlas-mock-client": "^1.0",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^8.0|^9.0",
-        "symfony/var-dumper": "^6.2"
+        "phpunit/phpunit": "^8.0|^9.0"
     },
     "autoload": {
         "psr-4": {
