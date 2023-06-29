@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           # ref: ${{ github.ref_name }}
-          ref: master
+          ref: main
 
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
@@ -29,6 +29,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           # branch: ${{ github.event.release.target_commitish }}
-          branch: master
+          branch: main
           commit_message: Update CHANGELOG.md
           file_pattern: CHANGELOG.md

@@ -10,14 +10,22 @@ use Psr\Http\Message\ResponseInterface;
 
 final class ResolvePromise
 {
-    public function __construct(private \Closure $middleware)
+    /**
+     * @var \Closure
+     */
+    private $middleware;
+
+    public function __construct(\Closure $middleware)
     {
+        $this->middleware = $middleware;
     }
 
     public function __invoke(RequestInterface $request, callable $next): PromiseInterface
     {
-        return $next($request)->then(
-            fn (ResponseInterface $response) => $this->middleware->__invoke($request, fn () => $response)
-        );
+        return $next($request)->then(function (ResponseInterface $response) use ($request) {
+            return $this->middleware->__invoke($request, static function () use ($response) {
+                return $response;
+            });
+        });
     }
 }

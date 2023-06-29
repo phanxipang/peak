@@ -18,11 +18,22 @@ use Psr\Http\Message\RequestInterface;
 
 final class Pool implements PoolInterface
 {
-    private ClientInterface $client;
+    /**
+     * @var ConnectorInterface
+     */
+    private $connector;
 
-    private int $concurrency = 25;
+    /**
+     * @var ClientInterface
+     */
+    private $client;
 
-    public function __construct(private ConnectorInterface $connector)
+    /**
+     * @var int
+     */
+    private $concurrency = 25;
+
+    public function __construct(ConnectorInterface $connector)
     {
         $client = $connector->client();
 
@@ -30,10 +41,11 @@ final class Pool implements PoolInterface
             throw new \InvalidArgumentException('Client must be Guzzle Client.');
         }
 
+        $this->connector = $connector;
         $this->client = $client;
     }
 
-    public function concurrent(int $concurrency): static
+    public function concurrent(int $concurrency): PoolInterface
     {
         if ($concurrency < 1) {
             throw new \ValueError('Argument #1 ($concurrency) must be positive, got '.$concurrency);

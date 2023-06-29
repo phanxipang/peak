@@ -8,7 +8,7 @@ use Jenky\Atlas\Response;
 
 interface PoolInterface
 {
-    public function concurrent(int $concurrency): static;
+    public function concurrent(int $concurrency): PoolInterface;
 
     /**
      * Send concurrent requests.
