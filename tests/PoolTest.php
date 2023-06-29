@@ -27,7 +27,9 @@ class PoolTest extends TestCase
         $connector = new NullConnector();
 
         $connector->middleware()->push(
-            Interceptor::response(fn (ResponseInterface $response) => $response->withHeader('X-Foo', 'baz'))
+            Interceptor::response(function (ResponseInterface $response) {
+                return $response->withHeader('X-Foo', 'baz');
+            })
         );
 
         for ($i=0; $i < 100; $i++) {

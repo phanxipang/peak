@@ -8,8 +8,14 @@ use Jenky\Atlas\Request;
 
 final class AkamaiTileRequest extends Request
 {
-    public function __construct(private int $i)
+    /**
+     * @var int
+     */
+    private $i;
+
+    public function __construct(int $i)
     {
+        $this->i = $i;
     }
 
     public function endpoint(): string
