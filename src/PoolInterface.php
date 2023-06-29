@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool;
 
+use Jenky\Atlas\Response;
+
 interface PoolInterface
 {
+    public function concurrent(int $concurrency): static;
+
     /**
      * Send concurrent requests.
      *
-     * @param  iterable<callable> $requests
-     * @return array<array-key, mixed>
+     * @param  iterable $requests
+     * @return array<array-key, Response>
      */
     public function send(iterable $requests): array;
 }
