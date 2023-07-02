@@ -33,11 +33,13 @@ class ReactPoolTest extends TestCase
             })
         );
 
-        for ($i=0; $i < 100; $i++) {
-            $requests[] = new AkamaiTileRequest($i);
-        }
+        $requests = static function (int $total) {
+            for ($i=1; $i <= $total; $i++) {
+                yield new AkamaiTileRequest($i);
+            }
+        };
 
-        $responses = (new Pool($connector))->send($requests);
+        $responses = (new Pool($connector))->send($requests(100));
         $this->assertCount(100, $responses);
         $this->assertInstanceOf(Response::class, $responses[0]);
         $this->assertSame('bar', $responses[0]->header('X-Foo'));
