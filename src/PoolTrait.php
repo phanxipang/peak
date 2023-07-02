@@ -6,10 +6,7 @@ namespace Jenky\Atlas\Pool;
 
 trait PoolTrait
 {
-    /**
-     * @var int
-     */
-    private $concurrency = 25;
+    private int $concurrency = 25;
 
     public function concurrent(int $concurrency): PoolInterface
     {
