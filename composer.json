@@ -62,6 +62,10 @@
             "@test"
         ]
     },
+    "suggest": {
+        "react/http": "Required to send concurrent requests using React pool",
+        "react/async": "Required to send concurrent requests using React pool"
+    },
     "extra": {
         "branch-alias": {
             "dev-main": "1.x-dev"

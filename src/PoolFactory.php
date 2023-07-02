@@ -23,7 +23,7 @@ final class PoolFactory
             return new React\Pool($connector);
         }
 
-        throw new UnsupportedException('You cannot use the pool feature as the "amphp/parallel" or "react/http" package is not installed.');
+        throw new UnsupportedException('You cannot use the pool feature as the "amphp/parallel" or "react/http", "react/http" package is not installed.');
         // throw new UnsupportedException('Pool feature is not supported for current client '.get_debug_type($client));
     }
 }
