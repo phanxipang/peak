@@ -38,7 +38,7 @@ final class Pool implements PoolInterface
                 if ($request instanceof Request) {
                     yield $key => Async\async(fn (): Response => $connector->send($request));
                 } elseif (is_callable($request)) {
-                    yield $key => Async\async($request);
+                    yield $key => Async\async(fn (): Response => $request($connector));
                 } else {
                     throw new \InvalidArgumentException('Each value of the iterator must be a Jenky\Atlas\Request or a \Closure that returns a Jenky\Atlas\Response object.');
                 }

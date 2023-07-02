@@ -2,6 +2,7 @@
 
 namespace Jenky\Atlas\Pool\Tests;
 
+use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Middleware\Interceptor;
 use Jenky\Atlas\NullConnector;
 use Jenky\Atlas\Pool\React\Pool;
@@ -14,7 +15,7 @@ class ReactPoolTest extends TestCase
     public function test_react_pool(): void
     {
         $responses = (new Pool(new EchoConnector()))->send([
-            new EchoRequest(),
+            fn (ConnectorInterface $connector) => $connector->send(new EchoRequest()),
             new EchoRequest('post'),
             new EchoRequest('put'),
         ]);
@@ -28,7 +29,7 @@ class ReactPoolTest extends TestCase
 
         $connector->middleware()->push(
             Interceptor::response(function (ResponseInterface $response) {
-                return $response->withHeader('X-Foo', 'baz');
+                return $response->withHeader('X-Foo', 'bar');
             })
         );
 
@@ -39,5 +40,6 @@ class ReactPoolTest extends TestCase
         $responses = (new Pool($connector))->send($requests);
         $this->assertCount(100, $responses);
         $this->assertInstanceOf(Response::class, $responses[0]);
+        $this->assertSame('bar', $responses[0]->header('X-Foo'));
     }
 }
