@@ -3,6 +3,8 @@
 namespace Jenky\Atlas\Pool\Tests;
 
 use Jenky\Atlas\NullConnector;
+use Jenky\Atlas\Pool\Exceptions\UnsupportedException;
+use Jenky\Atlas\Pool\PoolFactory;
 use PHPUnit\Framework\TestCase;
 
 class PoolTest extends TestCase
@@ -28,5 +30,12 @@ class PoolTest extends TestCase
         $pool->concurrent(-1);
 
         $this->assertNotSame($pool, $pool->concurrent(10), 'Pool is immutable');
+    }
+
+    public function test_factory(): void
+    {
+        $this->expectException(UnsupportedException::class);
+
+        $pool = PoolFactory::create(new NullConnector());
     }
 }
