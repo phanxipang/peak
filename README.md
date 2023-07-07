@@ -61,7 +61,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [link-travis]: https://travis-ci.org/jenky/atlas-pool
 [link-scrutinizer]: https://scrutinizer-ci.com/g/jenky/atlas-pool/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/jenky/atlas-pool
-[link-gh-actions]: https://github.com/jenky/jenky/atlas-pool
+[link-gh-actions]: https://github.com/jenky/atlas-pool
 [link-codecov]: https://codecov.io/gh/jenky/atlas-pool
 [link-downloads]: https://packagist.org/packages/jenky/atlas-pool
 
