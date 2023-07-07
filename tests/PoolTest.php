@@ -36,6 +36,6 @@ class PoolTest extends TestCase
     {
         $this->expectException(UnsupportedException::class);
 
-        $pool = PoolFactory::create(new NullConnector());
+        PoolFactory::create(new NullConnector());
     }
 }
