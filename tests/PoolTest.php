@@ -25,13 +25,13 @@ class PoolTest extends TestCase
     {
         $pool = new NullPool(new NullConnector());
 
+        $pool->concurrent(10);
+
+        $this->assertNotSame($pool, $pool->concurrent(10), 'Pool is immutable');
+
         $this->expectException(\ValueError::class);
 
         $pool->concurrent(-1);
-
-        $new = $pool->concurrent(10);
-
-        $this->assertNotSame($pool, $new, 'Pool is immutable');
     }
 
     public function test_factory(): void
