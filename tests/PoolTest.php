@@ -29,7 +29,9 @@ class PoolTest extends TestCase
 
         $pool->concurrent(-1);
 
-        $this->assertNotSame($pool, $pool->concurrent(10), 'Pool is immutable');
+        $new = $pool->concurrent(10);
+
+        $this->assertNotSame($pool, $new, 'Pool is immutable');
     }
 
     public function test_factory(): void
