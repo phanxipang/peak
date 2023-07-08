@@ -4,36 +4,22 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool;
 
-use GuzzleHttp\ClientInterface;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Pool\Exceptions\UnsupportedException;
 
 final class PoolFactory
 {
+    /**
+     * Create a new pool instance for given connector.
+     *
+     * @throws UnsupportedException
+     */
     public static function create(ConnectorInterface $connector): PoolInterface
     {
-        $client = $connector->client();
-
-        if ($client instanceof ClientInterface) {
-            return new Guzzle\Pool($connector);
+        if (class_exists(React\Pool::class)) {
+            return new React\Pool($connector); //@phpstan-ignore-line
         }
 
-        throw new UnsupportedException('Pool feature is not supported for current client '.get_class($client));
+        throw new UnsupportedException('You cannot use the pool feature as the "jenky/atlas-react-pool" package is not installed.');
     }
-
-    /*
-     * Get default pool instance.
-     *
-     * @return array<class-string, callable>
-     */
-    /* private static function candidates(): array
-    {
-        return [
-            ReactPool::class => fn (): bool => function_exists('React\\Async\\async')
-                && function_exists('React\\Async\\await')
-                && function_exists('React\\Async\\parallel'),
-            AmpPool::class => fn (): bool => function_exists('Amp\\async')
-                && function_exists('Amp\\Future\awaitAll'),
-        ];
-    } */
 }
