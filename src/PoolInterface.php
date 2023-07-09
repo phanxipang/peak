@@ -13,7 +13,7 @@ interface PoolInterface
     /**
      * Set the maximum number of requests to send concurrently.
      */
-    public function concurrent(int $concurrency): PoolInterface;
+    public function concurrent(int $concurrency): static;
 
     /**
      * Send concurrent requests.
