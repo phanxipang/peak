@@ -25,6 +25,9 @@ final class PoolFactory
         throw new UnsupportedException('You cannot use the pool feature as the "jenky/atlas-react-pool" package is not installed.');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private static function createReactPool(ConnectorInterface $connector): PoolInterface
     {
         $client = $connector->client();
