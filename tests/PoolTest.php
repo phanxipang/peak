@@ -11,7 +11,7 @@ class PoolTest extends TestCase
 {
     public function test_pool(): void
     {
-        $pool = new NullPool(new NullConnector());
+        $pool = new NullPool();
 
         $responses = $pool->send([
             new DummyRequest(),
@@ -23,7 +23,7 @@ class PoolTest extends TestCase
 
     public function test_concurrent(): void
     {
-        $pool = new NullPool(new NullConnector());
+        $pool = new NullPool();
 
         $pool->concurrent(10);
 
