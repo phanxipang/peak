@@ -2,6 +2,7 @@
 
 namespace Jenky\Atlas\Pool\Tests;
 
+use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\NullConnector;
 use Jenky\Atlas\Pool\Exceptions\UnsupportedException;
 use Jenky\Atlas\Pool\PoolFactory;
@@ -34,10 +35,16 @@ class PoolTest extends TestCase
         $pool->concurrent(-1);
     }
 
-    public function test_factory(): void
+    public function test_custom_factory(): void
     {
         $this->expectException(UnsupportedException::class);
 
         PoolFactory::create(new NullConnector());
+
+        PoolFactory::register(fn (ConnectorInterface $connector) => new NullPool());
+
+        $pool = PoolFactory::create(new NullConnector());
+
+        $this->assertInstanceOf(NullPool::class, $pool);
     }
 }
