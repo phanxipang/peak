@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool;
 
+use GuzzleHttp\ClientInterface;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Pool\Exceptions\UnsupportedException;
-use React\Http\Browser;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class PoolFactory
@@ -42,8 +42,10 @@ final class PoolFactory
 
         if ($client instanceof Psr18Client) {
             $newClient = new React\SymfonyClient();
+        } elseif ($client instanceof ClientInterface) {
+            $newClient = new React\GuzzleClient($client);
         } else {
-            $newClient = new React\Client(new Browser());
+            $newClient = new React\Client();
         }
 
         return $connector->withClient($newClient);
