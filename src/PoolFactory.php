@@ -41,7 +41,14 @@ final class PoolFactory
         }
 
         if ($client instanceof Psr18Client) {
-            $newClient = new React\SymfonyClient();
+            try {
+                $reflectionProperty = new \ReflectionProperty($client, 'client');
+                $reflectionProperty->setAccessible(true);
+
+                $newClient = new React\SymfonyClient($reflectionProperty->getValue($client));
+            } catch (\Throwable) {
+                $newClient = new React\SymfonyClient();
+            }
         } elseif ($client instanceof ClientInterface) {
             $newClient = new React\GuzzleClient($client);
         } else {
