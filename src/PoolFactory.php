@@ -48,6 +48,6 @@ final class PoolFactory
             $newClient = new React\Client();
         }
 
-        return $connector->withClient($newClient);
+        return new React\Pool($connector->withClient($newClient));
     }
 }
