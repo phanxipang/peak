@@ -8,7 +8,7 @@ trait PoolTrait
 {
     private int $concurrency = 25;
 
-    public function concurrent(int $concurrency): PoolInterface
+    public function concurrent(int $concurrency): static
     {
         if ($concurrency < 1) {
             throw new \ValueError('Argument #1 ($concurrency) must be positive, got '.$concurrency);
