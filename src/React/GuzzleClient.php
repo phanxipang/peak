@@ -7,7 +7,7 @@ namespace Jenky\Atlas\Pool\React;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
-use Jenky\Concurrency\AsyncClientInterface;
+use Jenky\Atlas\Pool\AsyncClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use React\Async;

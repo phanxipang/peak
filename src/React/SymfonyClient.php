@@ -7,7 +7,7 @@ namespace Jenky\Atlas\Pool\React;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\Exception\NetworkException;
 use Jenky\Atlas\Exception\RequestException;
-use Jenky\Concurrency\AsyncClientInterface;
+use Jenky\Atlas\Pool\AsyncClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -6,8 +6,7 @@ namespace Jenky\Atlas\Pool;
 
 use GuzzleHttp\ClientInterface;
 use Jenky\Atlas\Contracts\ConnectorInterface;
-use Jenky\Concurrency\AsyncClientInterface;
-use Jenky\Concurrency\Exceptions\UnsupportedException;
+use Jenky\Atlas\Pool\Exceptions\UnsupportedException;
 use Jenky\Concurrency\PoolInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 
