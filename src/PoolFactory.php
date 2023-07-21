@@ -19,7 +19,7 @@ final class PoolFactory
      */
     public static function create(ConnectorInterface $connector): PoolInterface
     {
-        if (class_exists(React\Pool::class)) {
+        if (function_exists('React\\Async\\async') && function_exists('React\\Async\\await')) {
             return self::createReactPool($connector);
         }
 
