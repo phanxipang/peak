@@ -21,7 +21,9 @@ final class Pool implements PoolInterface
 
     public function concurrent(int $concurrency): PoolInterface
     {
-        throw new \LogicException('Psl pool does not support concurrency limit.');
+        @trigger_error('Psl pool does not support concurrency limit.', E_USER_WARNING);
+
+        return $this;
     }
 
     public function send(iterable $requests): array
