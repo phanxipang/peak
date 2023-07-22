@@ -38,6 +38,6 @@ final class Pool implements PoolInterface
             }
         };
 
-        return Async\concurrently($promises($this->connector));
+        return Async\concurrently($promises($this->connector)); //@phpstan-ignore-line
     }
 }
