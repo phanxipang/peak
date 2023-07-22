@@ -7,7 +7,7 @@ use Jenky\Atlas\Pool\Exceptions\UnsupportedException;
 use Jenky\Atlas\Pool\PoolFactory;
 use PHPUnit\Framework\TestCase;
 
-class PoolTest extends TestCase
+final class PoolTest extends TestCase
 {
     public function test_pool(): void
     {

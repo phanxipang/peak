@@ -25,6 +25,7 @@
         "jenky/concurrency": "1.x-dev"
     },
     "require-dev": {
+        "azjezz/psl": "^2.7",
         "clue/mq-react": "^1.5",
         "friendsofphp/php-cs-fixer": "^3.15",
         "guzzlehttp/guzzle": "^7.5",
