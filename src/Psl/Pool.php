@@ -19,6 +19,11 @@ final class Pool implements PoolInterface
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @throws \ValueError
+     */
     public function concurrent(int $concurrency): PoolInterface
     {
         @trigger_error('Psl pool does not support concurrency limit.', E_USER_WARNING);
