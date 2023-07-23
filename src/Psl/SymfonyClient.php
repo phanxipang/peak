@@ -9,7 +9,7 @@ use Jenky\Atlas\Exception\NetworkException;
 use Jenky\Atlas\Exception\RequestException;
 use Jenky\Atlas\Pool\AsyncClientInterface;
 use Psl\Async;
-use Psl\Promise\PromiseInterface;
+use Psl\Async\Awaitable;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -72,7 +72,7 @@ final class SymfonyClient implements AsyncClientInterface, ResetInterface
         // @codeCoverageIgnoreEnd
     }
 
-    private function createResponse(SymfonyResponseInterface $response): PromiseInterface
+    private function createResponse(SymfonyResponseInterface $response): Awaitable
     {
         $defer = new Async\Deferred();
 
