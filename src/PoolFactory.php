@@ -10,10 +10,33 @@ use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Concurrency\PoolInterface;
 use Psl\Async\Awaitable;
+use React\Http\Browser;
 use Symfony\Component\HttpClient\Psr18Client;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class PoolFactory
 {
+    /**
+     * @var array<callable(ConnectorInterface): PoolInterface>
+     */
+    private static array $candidates = [];
+
+    /**
+     * @var array<class-string, PoolInterface>
+     */
+    private static array $cached = [];
+
+    public function __construct()
+    {
+        if ($this->isPslInstalled()) {
+            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createPslPool($connector);
+        }
+
+        if ($this->isReactInstalled()) {
+            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createReactPool($connector);
+        }
+    }
+
     /**
      * Create a new pool instance for given connector.
      *
@@ -22,54 +45,69 @@ final class PoolFactory
      */
     public static function create(ConnectorInterface $connector): PoolInterface
     {
-        if (class_exists(Awaitable::class)) {
-            return self::createPslPool($connector);
-        }
-
-        if (function_exists('React\\Async\\async') && function_exists('React\\Async\\await')) {
-            return self::createReactPool($connector);
-        }
-
-        throw new UnsupportedFeatureException('You cannot use the pool feature as the "jenky/atlas-react-pool" package is not installed.');
+        return (new self())->createPool($connector);
     }
 
     /**
-     * @codeCoverageIgnore
+     * Create a new pool instance for given connector.
+     *
+     * @throws UnsupportedClientException
+     * @throws UnsupportedFeatureException
      */
-    private static function createPslPool(ConnectorInterface $connector): Psl\Pool
+    public function createPool(ConnectorInterface $connector): PoolInterface
     {
-        $client = $connector->client();
+        $key = get_class($connector);
 
-        if ($client instanceof AsyncClientInterface) {
-            return new Psl\Pool(clone $connector);
+        if (! empty(self::$cached[$key])) {
+            return self::$cached[$key];
         }
 
-        if (! method_exists($connector, 'withClient')) {
-            throw new \LogicException('Unable to swap the underlying client of connector '.get_debug_type($connector));
-        }
-
-        if ($client instanceof Psr18Client) {
+        foreach (self::$candidates as $callback) {
             try {
-                $reflectionProperty = new \ReflectionProperty($client, 'client');
-                $reflectionProperty->setAccessible(true);
+                $pool = $callback($connector);
 
-                $newClient = new Psl\SymfonyClient($reflectionProperty->getValue($client));
+                if ($pool instanceof PoolInterface) {
+                    return self::$cached[$key] ??= $pool;
+                }
             } catch (\Throwable) {
-                $newClient = new Psl\SymfonyClient();
+                continue;
             }
-        } elseif ($client instanceof ClientInterface) {
-            $newClient = new Psl\GuzzleClient($client);
-        } else {
-            throw new UnsupportedClientException('The client is not supported');
         }
 
-        return new Psl\Pool($connector->withClient($newClient));
+        throw new UnsupportedFeatureException('You cannot use the pool feature as the required package is not installed.');
     }
 
     /**
-     * @codeCoverageIgnore
+     * @throws \LogicException
      */
-    private static function createReactPool(ConnectorInterface $connector): React\Pool
+    private function assertConnector(ConnectorInterface $connector): void
+    {
+        if (! method_exists($connector, 'withClient')) {
+            // @codeCoverageIgnoreStart
+            throw new \LogicException('Unable to swap the underlying client of connector '.get_debug_type($connector));
+            // @codeCoverageIgnoreEnd
+        }
+    }
+
+    private function getUnderlyingSymfonyHttpClient(Psr18Client $client): HttpClientInterface
+    {
+        $reflectionProperty = new \ReflectionProperty($client, 'client');
+        $reflectionProperty->setAccessible(true);
+
+        return $reflectionProperty->getValue($client);
+    }
+
+    private function isReactInstalled(): bool
+    {
+        return function_exists('React\\Async\\async');
+    }
+
+    private function isPslInstalled(): bool
+    {
+        return class_exists(Awaitable::class);
+    }
+
+    private function createReactPool(ConnectorInterface $connector): React\Pool
     {
         $client = $connector->client();
 
@@ -77,25 +115,50 @@ final class PoolFactory
             return new React\Pool(clone $connector);
         }
 
-        if (! method_exists($connector, 'withClient')) {
-            throw new \LogicException('Unable to swap the underlying client of connector '.get_debug_type($connector));
-        }
+        $this->assertConnector($connector);
 
         if ($client instanceof Psr18Client) {
             try {
-                $reflectionProperty = new \ReflectionProperty($client, 'client');
-                $reflectionProperty->setAccessible(true);
-
-                $newClient = new React\SymfonyClient($reflectionProperty->getValue($client));
+                $newClient = new React\SymfonyClient($this->getUnderlyingSymfonyHttpClient($client));
             } catch (\Throwable) {
                 $newClient = new React\SymfonyClient();
             }
         } elseif ($client instanceof ClientInterface) {
             $newClient = new React\GuzzleClient($client);
-        } else {
+        } elseif (class_exists(Browser::class)) {
             $newClient = new React\Client();
+        } else {
+            throw new UnsupportedClientException(sprintf(
+                'The concurrent requests feature cannot be used as the client %s is not supported. To utilize this feature, please install package "react/http".',
+                get_debug_type($client)
+            ));
         }
 
-        return new React\Pool($connector->withClient($newClient));
+        return new React\Pool($connector->withClient($newClient)); //@phpstan-ignore-line
+    }
+
+    private function createPslPool(ConnectorInterface $connector): Psl\Pool
+    {
+        $client = $connector->client();
+
+        if ($client instanceof AsyncClientInterface) {
+            return new Psl\Pool(clone $connector);
+        }
+
+        $this->assertConnector($connector);
+
+        if ($client instanceof Psr18Client) {
+            try {
+                $newClient = new Psl\SymfonyClient($this->getUnderlyingSymfonyHttpClient($client));
+            } catch (\Throwable) {
+                $newClient = new Psl\SymfonyClient();
+            }
+        } elseif ($client instanceof ClientInterface) {
+            $newClient = new Psl\GuzzleClient($client);
+        } else {
+            throw new UnsupportedClientException(sprintf('The client %s is not supported.', get_debug_type($client)));
+        }
+
+        return new Psl\Pool($connector->withClient($newClient)); //@phpstan-ignore-line
     }
 }

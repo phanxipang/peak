@@ -33,6 +33,8 @@ abstract class TestCase extends BaseTestCase
 
     protected function performTests(ConnectorInterface $connector, int $totalRequests = 100): void
     {
+        $total = (int) getenv('TEST_TOTAL_CONCURRENT_REQUESTS') ?: $totalRequests;
+
         $connector->middleware()->push(
             Interceptor::response(function (ResponseInterface $response) {
                 return $response->withHeader('X-Foo', 'bar');
@@ -40,9 +42,9 @@ abstract class TestCase extends BaseTestCase
         );
 
         $responses = $this->createPool($connector)
-            ->send($this->createRequests($totalRequests));
+            ->send($this->createRequests($total));
 
-        $this->assertCount(100, $responses);
+        $this->assertCount($total, $responses);
         $this->assertInstanceOf(Response::class, $responses[0]);
         $this->assertSame('bar', $responses[0]->header('X-Foo'));
     }

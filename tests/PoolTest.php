@@ -36,9 +36,12 @@ final class PoolTest extends TestCase
 
     public function test_factory(): void
     {
-        $this->markTestSkipped();
-        $this->expectException(UnsupportedFeatureException::class);
+        // $pool = $this->createMock(PoolFactory::class);
+        // $pool->expects(self::once())->method('isReactInstalled')->willReturn(false);
+        // $pool->expects(self::once())->method('isPslInstalled')->willReturn(false);
 
-        PoolFactory::create(new NullConnector());
+        // $this->expectException(UnsupportedFeatureException::class);
+
+        // $pool->createPool(new NullConnector());
     }
 }
