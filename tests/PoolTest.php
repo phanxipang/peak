@@ -3,7 +3,7 @@
 namespace Jenky\Atlas\Pool\Tests;
 
 use Jenky\Atlas\NullConnector;
-use Jenky\Atlas\Pool\Exceptions\UnsupportedFeatureException;
+use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Atlas\Pool\PoolFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -36,12 +36,20 @@ final class PoolTest extends TestCase
 
     public function test_factory(): void
     {
-        // $pool = $this->createMock(PoolFactory::class);
-        // $pool->expects(self::once())->method('isReactInstalled')->willReturn(false);
-        // $pool->expects(self::once())->method('isPslInstalled')->willReturn(false);
+        $factory = new PoolFactory();
 
-        // $this->expectException(UnsupportedFeatureException::class);
+        $reflection = new \ReflectionClass($factory);
+        $reflection->setStaticPropertyValue('candidates', []);
 
-        // $pool->createPool(new NullConnector());
+        $this->expectException(UnsupportedFeatureException::class);
+
+        $factory->createPool(new NullConnector());
+    }
+
+    public function test_factory_react(): void
+    {
+        $factory = new PoolFactory();
+
+        $reflection = new \ReflectionClass($factory);
     }
 }

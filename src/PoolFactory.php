@@ -21,20 +21,9 @@ final class PoolFactory
      */
     private static array $candidates = [];
 
-    /**
-     * @var array<class-string, PoolInterface>
-     */
-    private static array $cached = [];
-
     public function __construct()
     {
-        if ($this->isPslInstalled()) {
-            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createPslPool($connector);
-        }
-
-        if ($this->isReactInstalled()) {
-            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createReactPool($connector);
-        }
+        $this->boot();
     }
 
     /**
@@ -56,25 +45,30 @@ final class PoolFactory
      */
     public function createPool(ConnectorInterface $connector): PoolInterface
     {
-        $key = get_class($connector);
-
-        if (! empty(self::$cached[$key])) {
-            return self::$cached[$key];
-        }
-
         foreach (self::$candidates as $callback) {
             try {
-                $pool = $callback($connector);
-
-                if ($pool instanceof PoolInterface) {
-                    return self::$cached[$key] ??= $pool;
-                }
+                return $callback($connector);
             } catch (\Throwable) {
                 continue;
             }
         }
 
         throw new UnsupportedFeatureException('You cannot use the pool feature as the required package is not installed.');
+    }
+
+    private function boot(): void
+    {
+        if (! empty(self::$candidates)) {
+            return;
+        }
+
+        if ($this->isPslInstalled()) {
+            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createPslPool($connector);
+        }
+
+        if ($this->isReactInstalled()) {
+            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createReactPool($connector);
+        }
     }
 
     /**

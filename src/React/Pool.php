@@ -6,10 +6,10 @@ namespace Jenky\Atlas\Pool\React;
 
 use Clue\React\Mq\Queue;
 use Jenky\Atlas\Contracts\ConnectorInterface;
+use Jenky\Atlas\Pool\PoolTrait;
 use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
 use Jenky\Concurrency\PoolInterface;
-use Jenky\Concurrency\PoolTrait;
 use React\Async;
 
 /**
