@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool;
 
+use Clue\React\Mq\Queue;
 use GuzzleHttp\ClientInterface;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
@@ -23,7 +24,17 @@ final class PoolFactory
 
     public function __construct()
     {
-        $this->boot();
+        if (! empty(self::$candidates)) {
+            return;
+        }
+
+        if ($this->isPslInstalled()) {
+            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createPslPool($connector);
+        }
+
+        if ($this->isReactInstalled()) {
+            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createReactPool($connector);
+        }
     }
 
     /**
@@ -53,22 +64,7 @@ final class PoolFactory
             }
         }
 
-        throw new UnsupportedFeatureException('You cannot use the pool feature as the required package is not installed.');
-    }
-
-    private function boot(): void
-    {
-        if (! empty(self::$candidates)) {
-            return;
-        }
-
-        if ($this->isPslInstalled()) {
-            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createPslPool($connector);
-        }
-
-        if ($this->isReactInstalled()) {
-            self::$candidates[] = fn (ConnectorInterface $connector) => $this->createReactPool($connector);
-        }
+        throw new UnsupportedFeatureException('You cannot use the pool feature as the required packages are not installed.');
     }
 
     /**
@@ -83,17 +79,21 @@ final class PoolFactory
         }
     }
 
-    private function getUnderlyingSymfonyHttpClient(Psr18Client $client): HttpClientInterface
+    private function getUnderlyingSymfonyHttpClient(Psr18Client $client): ?HttpClientInterface
     {
-        $reflectionProperty = new \ReflectionProperty($client, 'client');
-        $reflectionProperty->setAccessible(true);
+        try {
+            $reflectionProperty = new \ReflectionProperty($client, 'client');
+            $reflectionProperty->setAccessible(true);
 
-        return $reflectionProperty->getValue($client);
+            return $reflectionProperty->getValue($client);
+        } catch (\Throwable) {
+            return null;
+        }
     }
 
     private function isReactInstalled(): bool
     {
-        return function_exists('React\\Async\\async');
+        return function_exists('React\\Async\\async') && class_exists(Queue::class);
     }
 
     private function isPslInstalled(): bool
@@ -112,11 +112,7 @@ final class PoolFactory
         $this->assertConnector($connector);
 
         if ($client instanceof Psr18Client) {
-            try {
-                $newClient = new React\SymfonyClient($this->getUnderlyingSymfonyHttpClient($client));
-            } catch (\Throwable) {
-                $newClient = new React\SymfonyClient();
-            }
+            $newClient = new React\SymfonyClient($this->getUnderlyingSymfonyHttpClient($client));
         } elseif ($client instanceof ClientInterface) {
             $newClient = new React\GuzzleClient($client);
         } elseif (class_exists(Browser::class)) {
@@ -142,15 +138,14 @@ final class PoolFactory
         $this->assertConnector($connector);
 
         if ($client instanceof Psr18Client) {
-            try {
-                $newClient = new Psl\SymfonyClient($this->getUnderlyingSymfonyHttpClient($client));
-            } catch (\Throwable) {
-                $newClient = new Psl\SymfonyClient();
-            }
+            $newClient = new Psl\SymfonyClient($this->getUnderlyingSymfonyHttpClient($client));
         } elseif ($client instanceof ClientInterface) {
             $newClient = new Psl\GuzzleClient($client);
         } else {
-            throw new UnsupportedClientException(sprintf('The client %s is not supported.', get_debug_type($client)));
+            throw new UnsupportedClientException(sprintf(
+                'The client %s is not supported. The PSL Pool only supports "guzzlehttp/guzzle" and "symfony/http-client".',
+                get_debug_type($client)
+            ));
         }
 
         return new Psl\Pool($connector->withClient($newClient)); //@phpstan-ignore-line

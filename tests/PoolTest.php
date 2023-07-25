@@ -2,6 +2,7 @@
 
 namespace Jenky\Atlas\Pool\Tests;
 
+use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\NullConnector;
 use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Atlas\Pool\PoolFactory;
@@ -46,10 +47,31 @@ final class PoolTest extends TestCase
         $factory->createPool(new NullConnector());
     }
 
-    public function test_factory_react(): void
+    private function createFactory(string $method): PoolFactory
     {
         $factory = new PoolFactory();
 
         $reflection = new \ReflectionClass($factory);
+
+        $method = $reflection->getMethod($method);
+        $method->setAccessible(true);
+
+        $reflection->setStaticPropertyValue('candidates', [fn (ConnectorInterface $connector) => $method->invoke($factory, $connector)]);
+
+        return $factory;
+    }
+
+    public function test_factory_react(): void
+    {
+        $pool = $this->createFactory('createReactPool')->createPool(new NullConnector());
+
+        $this->assertInstanceOf(\Jenky\Atlas\Pool\React\Pool::class, $pool);
+    }
+
+    public function test_factory_psl(): void
+    {
+        $pool = $this->createFactory('createPslPool')->createPool(new NullConnector());
+
+        $this->assertInstanceOf(\Jenky\Atlas\Pool\Psl\Pool::class, $pool);
     }
 }
