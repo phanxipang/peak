@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Jenky\Atlas\Pool\Tests;
 
 use Jenky\Atlas\Contracts\ConnectorInterface;
+use Jenky\Atlas\Pool\PoolTrait;
 use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
 use Jenky\Concurrency\PoolInterface;
-use Jenky\Concurrency\PoolTrait;
 
 /**
  * @implements PoolInterface<Request|callable(ConnectorInterface): Response, Response>
