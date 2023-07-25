@@ -7,6 +7,7 @@ namespace Jenky\Atlas\Pool;
 use GuzzleHttp\ClientInterface;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Pool\Exceptions\UnsupportedException;
+use Jenky\Concurrency\PoolInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class PoolFactory
@@ -18,7 +19,7 @@ final class PoolFactory
      */
     public static function create(ConnectorInterface $connector): PoolInterface
     {
-        if (class_exists(React\Pool::class)) {
+        if (function_exists('React\\Async\\async') && function_exists('React\\Async\\await')) {
             return self::createReactPool($connector);
         }
 
