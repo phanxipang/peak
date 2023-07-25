@@ -7,7 +7,6 @@ namespace Jenky\Atlas\Pool\Psl;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
-use Jenky\Atlas\Pool\AsyncClientInterface;
 use Psl\Async;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

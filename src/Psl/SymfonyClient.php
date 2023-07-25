@@ -7,7 +7,6 @@ namespace Jenky\Atlas\Pool\Psl;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\Exception\NetworkException;
 use Jenky\Atlas\Exception\RequestException;
-use Jenky\Atlas\Pool\AsyncClientInterface;
 use Psl\Async;
 use Psl\Async\Awaitable;
 use Psr\Http\Message\RequestInterface;

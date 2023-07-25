@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool;
+namespace Jenky\Atlas\Pool\Psl;
 
 use Psr\Http\Client\ClientInterface;
 

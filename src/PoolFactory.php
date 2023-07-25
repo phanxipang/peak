@@ -105,7 +105,7 @@ final class PoolFactory
     {
         $client = $connector->client();
 
-        if ($client instanceof AsyncClientInterface) {
+        if ($client instanceof React\AsyncClientInterface) {
             return new React\Pool(clone $connector);
         }
 
@@ -131,7 +131,7 @@ final class PoolFactory
     {
         $client = $connector->client();
 
-        if ($client instanceof AsyncClientInterface) {
+        if ($client instanceof Psl\AsyncClientInterface) {
             return new Psl\Pool(clone $connector);
         }
 
