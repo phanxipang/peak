@@ -9,7 +9,6 @@ use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Concurrency\PoolInterface;
-use Psl\Async\Awaitable;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class PoolFactory

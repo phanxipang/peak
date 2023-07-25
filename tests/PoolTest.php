@@ -3,7 +3,7 @@
 namespace Jenky\Atlas\Pool\Tests;
 
 use Jenky\Atlas\NullConnector;
-use Jenky\Atlas\Pool\Exceptions\UnsupportedFeatureException;
+use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Atlas\Pool\PoolFactory;
 use PHPUnit\Framework\TestCase;
 
