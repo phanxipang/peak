@@ -2,33 +2,30 @@
 
 namespace Jenky\Atlas\Pool\Tests;
 
+use GuzzleHttp\Client;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\NullConnector;
+use Jenky\Atlas\Pool;
+use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Atlas\Pool\PoolFactory;
+use Jenky\Concurrency\PoolInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpClient\Psr18Client;
 
 final class PoolTest extends TestCase
 {
-    public function test_pool(): void
-    {
-        $pool = new NullPool();
-
-        $responses = $pool->send([
-            new DummyRequest(),
-            new DummyRequest(),
-        ]);
-
-        $this->assertCount(0, $responses);
-    }
-
     public function test_concurrent(): void
     {
-        $pool = new NullPool();
+        $pool = PoolFactory::create(new NullConnector());
 
-        $pool->concurrent(10);
+        $responses = $pool->concurrent(10)
+            ->send([
+                new DummyRequest(),
+                new DummyRequest(),
+            ]);
 
-        $this->assertNotSame($pool, $pool->concurrent(10), 'Pool is immutable');
+        $this->assertCount(2, $responses);
 
         $this->expectException(\ValueError::class);
 
@@ -61,17 +58,45 @@ final class PoolTest extends TestCase
         return $factory;
     }
 
+    /**
+     * @param class-string $poolClass
+     * @param class-string $clientClass
+     */
+    private function assertPoolAndClient(string $poolClass, string $clientClass, PoolInterface $pool): void
+    {
+        $this->assertInstanceOf($poolClass, $pool);
+
+        $reflection = new \ReflectionProperty($pool, 'connector');
+        $reflection->setAccessible(true);
+
+        $this->assertInstanceOf($clientClass, $reflection->getValue($pool)->client());
+    }
+
     public function test_factory_react(): void
     {
-        $pool = $this->createFactory('createReactPool')->createPool(new NullConnector());
+        $factory = $this->createFactory('createReactPool');
 
-        $this->assertInstanceOf(\Jenky\Atlas\Pool\React\Pool::class, $pool);
+        $pool = $factory->createPool((new NullConnector())->withClient(new Psr18Client()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\SymfonyClient::class, $pool);
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new Client()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\GuzzleClient::class, $pool);
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new FakeHttpClient()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\Client::class, $pool);
     }
 
     public function test_factory_psl(): void
     {
-        $pool = $this->createFactory('createPslPool')->createPool(new NullConnector());
+        $factory = $this->createFactory('createPslPool');
 
-        $this->assertInstanceOf(\Jenky\Atlas\Pool\Psl\Pool::class, $pool);
+        $pool = $factory->createPool((new NullConnector())->withClient(new Psr18Client()));
+        $this->assertPoolAndClient(Pool\Psl\Pool::class, Pool\Psl\SymfonyClient::class, $pool);
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new Client()));
+        $this->assertPoolAndClient(Pool\Psl\Pool::class, Pool\Psl\GuzzleClient::class, $pool);
+
+        $this->expectException(UnsupportedClientException::class);
+        $pool = $factory->createPool((new NullConnector())->withClient(new FakeHttpClient()));
     }
 }

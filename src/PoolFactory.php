@@ -28,6 +28,8 @@ final class PoolFactory
             return;
         }
 
+        self::$candidates[] = fn (ConnectorInterface $connector) => $this->createPoolByClientType($connector);
+
         if ($this->isPslInstalled()) {
             self::$candidates[] = fn (ConnectorInterface $connector) => $this->createPslPool($connector);
         }
@@ -59,7 +61,11 @@ final class PoolFactory
         foreach (self::$candidates as $callback) {
             try {
                 return $callback($connector);
-            } catch (\Throwable) {
+            } catch (\Throwable $e) {
+                if ($e instanceof UnsupportedClientException) {
+                    throw $e;
+                }
+
                 continue;
             }
         }
@@ -89,6 +95,17 @@ final class PoolFactory
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    private function createPoolByClientType(ConnectorInterface $connector): PoolInterface
+    {
+        $client = $connector->client();
+
+        return match (true) {
+            $this->isReactInstalled() && $client instanceof React\AsyncClientInterface => $this->createReactPool($connector),
+            $this->isPslInstalled() && $client instanceof Psl\AsyncClientInterface => $this->createPslPool($connector),
+            default => throw new \Exception('Unsupported client. Swap client and retry')
+        };
     }
 
     private function isReactInstalled(): bool
