@@ -92,9 +92,11 @@ final class PoolFactory
             $reflectionProperty->setAccessible(true);
 
             return $reflectionProperty->getValue($client);
+            // @codeCoverageIgnoreStart
         } catch (\Throwable) {
             return null;
         }
+        // @codeCoverageIgnoreEnd
     }
 
     private function createPoolByClientType(ConnectorInterface $connector): PoolInterface
@@ -135,10 +137,12 @@ final class PoolFactory
         } elseif (class_exists(Browser::class)) {
             $newClient = new React\Client();
         } else {
+            // @codeCoverageIgnoreStart
             throw new UnsupportedClientException(sprintf(
                 'The concurrent requests feature cannot be used as the client %s is not supported. To utilize this feature, please install package "react/http".',
                 get_debug_type($client)
             ));
+            // @codeCoverageIgnoreEnd
         }
 
         return new React\Pool($connector->withClient($newClient)); //@phpstan-ignore-line

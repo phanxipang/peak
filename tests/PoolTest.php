@@ -72,6 +72,15 @@ final class PoolTest extends TestCase
         $this->assertInstanceOf($clientClass, $reflection->getValue($pool)->client());
     }
 
+    public function test_factory_using_supported_client(): void
+    {
+        $pool = PoolFactory::create((new NullConnector())->withClient(new Pool\React\GuzzleClient()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\GuzzleClient::class, $pool);
+
+        $pool = PoolFactory::create((new NullConnector())->withClient(new Pool\Psl\SymfonyClient()));
+        $this->assertPoolAndClient(Pool\Psl\Pool::class, Pool\Psl\SymfonyClient::class, $pool);
+    }
+
     public function test_factory_react(): void
     {
         $factory = $this->createFactory('createReactPool');
