@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool\React;
 
-use Jenky\Atlas\Pool\AsyncClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use React\Async;

@@ -28,6 +28,10 @@ final class Pool implements PoolInterface
     {
         @trigger_error('Psl pool does not support concurrency limit.', E_USER_WARNING);
 
+        if ($concurrency < 1) {
+            throw new \ValueError('Argument #1 ($concurrency) must be positive, got '.$concurrency);
+        }
+
         return $this;
     }
 

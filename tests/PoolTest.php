@@ -2,26 +2,25 @@
 
 namespace Jenky\Atlas\Pool\Tests;
 
+use GuzzleHttp\Client;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\NullConnector;
+use Jenky\Atlas\Pool;
+use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Atlas\Pool\PoolFactory;
+use Jenky\Atlas\Pool\PoolTrait;
+use Jenky\Concurrency\PoolInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpClient\Psr18Client;
 
 final class PoolTest extends TestCase
 {
-    public function test_pool(): void
-    {
-        $pool = new NullPool();
-
-        $responses = $pool->send([
-            new DummyRequest(),
-            new DummyRequest(),
-        ]);
-
-        $this->assertCount(0, $responses);
-    }
-
-    public function test_concurrent(): void
+    public function test_concurrency_limit(): void
     {
         $pool = new NullPool();
 
@@ -34,11 +33,102 @@ final class PoolTest extends TestCase
         $pool->concurrent(-1);
     }
 
-    public function test_factory(): void
+    public function test_factory_without_candidates(): void
     {
-        $this->markTestSkipped();
+        $factory = new PoolFactory();
+
+        $reflection = new \ReflectionClass($factory);
+        $reflection->setStaticPropertyValue('candidates', []);
+
         $this->expectException(UnsupportedFeatureException::class);
 
-        PoolFactory::create(new NullConnector());
+        $factory->createPool(new NullConnector());
+    }
+
+    private function createFactory(string $method): PoolFactory
+    {
+        $factory = new PoolFactory();
+
+        $reflection = new \ReflectionClass($factory);
+
+        $method = $reflection->getMethod($method);
+        $method->setAccessible(true);
+
+        $reflection->setStaticPropertyValue('candidates', [fn (ConnectorInterface $connector) => $method->invoke($factory, $connector)]);
+
+        return $factory;
+    }
+
+    /**
+     * @param class-string $poolClass
+     * @param class-string $clientClass
+     */
+    private function assertPoolAndClient(string $poolClass, string $clientClass, PoolInterface $pool): void
+    {
+        $this->assertInstanceOf($poolClass, $pool);
+
+        $reflection = new \ReflectionProperty($pool, 'connector');
+        $reflection->setAccessible(true);
+
+        $this->assertInstanceOf($clientClass, $reflection->getValue($pool)->client());
+    }
+
+    public function test_factory_using_supported_client(): void
+    {
+        // Reset the factory candidates
+        $reflection = new \ReflectionClass(PoolFactory::class);
+        $reflection->setStaticPropertyValue('candidates', []);
+
+        $pool = PoolFactory::create((new NullConnector())->withClient(new Pool\React\GuzzleClient()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\GuzzleClient::class, $pool);
+
+        $pool = PoolFactory::create((new NullConnector())->withClient(new Pool\Psl\SymfonyClient()));
+        $this->assertPoolAndClient(Pool\Psl\Pool::class, Pool\Psl\SymfonyClient::class, $pool);
+    }
+
+    public function test_factory_react(): void
+    {
+        $factory = $this->createFactory('createReactPool');
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new Psr18Client()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\SymfonyClient::class, $pool);
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new Client()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\GuzzleClient::class, $pool);
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new FakeHttpClient()));
+        $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\Client::class, $pool);
+    }
+
+    public function test_factory_psl(): void
+    {
+        $factory = $this->createFactory('createPslPool');
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new Psr18Client()));
+        $this->assertPoolAndClient(Pool\Psl\Pool::class, Pool\Psl\SymfonyClient::class, $pool);
+
+        $pool = $factory->createPool((new NullConnector())->withClient(new Client()));
+        $this->assertPoolAndClient(Pool\Psl\Pool::class, Pool\Psl\GuzzleClient::class, $pool);
+
+        $this->expectException(UnsupportedClientException::class);
+        $pool = $factory->createPool((new NullConnector())->withClient(new FakeHttpClient()));
+    }
+}
+
+final class NullPool implements PoolInterface
+{
+    use PoolTrait;
+
+    public function send(iterable $requests): array
+    {
+        return iterator_to_array($requests);
+    }
+}
+
+final class FakeHttpClient implements ClientInterface
+{
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        return Psr17FactoryDiscovery::findResponseFactory()->createResponse();
     }
 }
