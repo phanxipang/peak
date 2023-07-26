@@ -6,6 +6,7 @@ namespace Jenky\Atlas\Pool\React;
 
 use Clue\React\Mq\Queue;
 use Jenky\Atlas\Contracts\ConnectorInterface;
+use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\PoolTrait;
 use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
@@ -21,6 +22,14 @@ final class Pool implements PoolInterface
 
     public function __construct(private ConnectorInterface $connector)
     {
+        if (! $connector->client() instanceof AsyncClientInterface) {
+            // @codeCoverageIgnoreStart
+            throw new UnsupportedClientException(sprintf(
+                'The client %s is not supported. Please swap the underlying client to supported one.',
+                get_debug_type($connector->client())
+            ));
+            // @codeCoverageIgnoreEnd
+        }
     }
 
     public function send(iterable $requests): array

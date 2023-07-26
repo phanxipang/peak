@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jenky\Atlas\Pool\Psl;
 
 use Jenky\Atlas\Contracts\ConnectorInterface;
+use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
 use Jenky\Concurrency\PoolInterface;
@@ -17,6 +18,14 @@ final class Pool implements PoolInterface
 {
     public function __construct(private ConnectorInterface $connector)
     {
+        if (! $connector->client() instanceof AsyncClientInterface) {
+            // @codeCoverageIgnoreStart
+            throw new UnsupportedClientException(sprintf(
+                'The client %s is not supported. Please swap the underlying client to supported one.',
+                get_debug_type($connector->client())
+            ));
+            // @codeCoverageIgnoreEnd
+        }
     }
 
     /**
