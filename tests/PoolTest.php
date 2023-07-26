@@ -9,30 +9,27 @@ use Jenky\Atlas\Pool;
 use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Jenky\Atlas\Pool\PoolFactory;
+use Jenky\Atlas\Pool\PoolTrait;
 use Jenky\Concurrency\PoolInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class PoolTest extends TestCase
 {
-    public function test_concurrent(): void
+    public function test_concurrency_limit(): void
     {
-        $pool = PoolFactory::create(new NullConnector());
+        $pool = new NullPool();
 
-        $responses = $pool->concurrent(10)
-            ->send([
-                new DummyRequest(),
-                new DummyRequest(),
-            ]);
+        $pool->concurrent(10);
 
-        $this->assertCount(2, $responses);
+        $this->assertNotSame($pool, $pool->concurrent(10), 'Pool is immutable');
 
         $this->expectException(\ValueError::class);
 
         $pool->concurrent(-1);
     }
 
-    public function test_factory(): void
+    public function test_factory_without_candidates(): void
     {
         $factory = new PoolFactory();
 
@@ -111,5 +108,15 @@ final class PoolTest extends TestCase
 
         $this->expectException(UnsupportedClientException::class);
         $pool = $factory->createPool((new NullConnector())->withClient(new FakeHttpClient()));
+    }
+}
+
+final class NullPool implements PoolInterface
+{
+    use PoolTrait;
+
+    public function send(iterable $requests): array
+    {
+        return iterator_to_array($requests);
     }
 }
