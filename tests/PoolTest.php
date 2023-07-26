@@ -74,6 +74,10 @@ final class PoolTest extends TestCase
 
     public function test_factory_using_supported_client(): void
     {
+        // Reset the factory candidates
+        $reflection = new \ReflectionClass(PoolFactory::class);
+        $reflection->setStaticPropertyValue('candidates', []);
+
         $pool = PoolFactory::create((new NullConnector())->withClient(new Pool\React\GuzzleClient()));
         $this->assertPoolAndClient(Pool\React\Pool::class, Pool\React\GuzzleClient::class, $pool);
 
