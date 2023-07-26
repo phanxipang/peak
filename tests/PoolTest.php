@@ -3,6 +3,7 @@
 namespace Jenky\Atlas\Pool\Tests;
 
 use GuzzleHttp\Client;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\NullConnector;
 use Jenky\Atlas\Pool;
@@ -12,6 +13,9 @@ use Jenky\Atlas\Pool\PoolFactory;
 use Jenky\Atlas\Pool\PoolTrait;
 use Jenky\Concurrency\PoolInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 
 final class PoolTest extends TestCase
@@ -118,5 +122,13 @@ final class NullPool implements PoolInterface
     public function send(iterable $requests): array
     {
         return iterator_to_array($requests);
+    }
+}
+
+final class FakeHttpClient implements ClientInterface
+{
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        return Psr17FactoryDiscovery::findResponseFactory()->createResponse();
     }
 }
