@@ -125,7 +125,7 @@ final class PoolFactory
         $client = $connector->client();
 
         if ($client instanceof React\AsyncClientInterface) {
-            return new React\Pool(clone $connector);
+            return new React\Pool($connector);
         }
 
         $this->assertConnector($connector);
@@ -153,7 +153,7 @@ final class PoolFactory
         $client = $connector->client();
 
         if ($client instanceof Psl\AsyncClientInterface) {
-            return new Psl\Pool(clone $connector);
+            return new Psl\Pool($connector);
         }
 
         $this->assertConnector($connector);
