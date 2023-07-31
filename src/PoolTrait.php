@@ -8,8 +8,16 @@ use Jenky\Concurrency\PoolInterface;
 
 trait PoolTrait
 {
+    /**
+     * @var positive-int
+     */
     private int $concurrency = 25;
 
+    /**
+     * @param positive-int $concurrency
+     *
+     * @throws \ValueError
+     */
     public function concurrent(int $concurrency): PoolInterface
     {
         if ($concurrency < 1) {
