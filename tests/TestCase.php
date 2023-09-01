@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function createRequests(int $total): iterable
     {
-        for ($i=1; $i <= $total; $i++) {
+        for ($i = 1; $i <= $total; $i++) {
             yield new AkamaiTileRequest($i);
         }
     }
