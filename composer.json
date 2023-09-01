@@ -22,11 +22,11 @@
     "require": {
         "php": "^8.1",
         "jenky/atlas": "^0.5",
-        "jenky/concurrency": "1.0"
+        "jenky/concurrency": "^1.0"
     },
     "require-dev": {
         "azjezz/psl": "^2.7",
-        "clue/mq-react": "^1.5",
+        "clue/mq-react": "^1.6",
         "friendsofphp/php-cs-fixer": "^3.15",
         "guzzlehttp/guzzle": "^7.5",
         "jenky/atlas-mock-client": "^1.0",

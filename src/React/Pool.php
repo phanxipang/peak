@@ -34,11 +34,6 @@ final class Pool implements PoolInterface
 
     public function send(iterable $requests): array
     {
-        if (\PHP_VERSION_ID >= 80200) {
-            // Temporary solution until https://github.com/clue/reactphp-mq/pull/36 release
-            error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
-        }
-
         $queue = new Queue($this->concurrency, null, static fn (\Closure $cb) => Async\async($cb)());
 
         $promises = static function (ConnectorInterface $connector) use ($requests, $queue) {
