@@ -23,9 +23,9 @@ final class Pool implements PoolInterface
     {
         if (! $connector->client() instanceof AsyncClientInterface) {
             // @codeCoverageIgnoreStart
-            throw new UnsupportedClientException(sprintf(
+            throw new UnsupportedClientException(\sprintf(
                 'The client %s is not supported. Please swap the underlying client to supported one.',
-                get_debug_type($connector->client())
+                \get_debug_type($connector->client())
             ));
             // @codeCoverageIgnoreEnd
         }
@@ -39,7 +39,7 @@ final class Pool implements PoolInterface
             foreach ($requests as $key => $request) {
                 if ($request instanceof Request) {
                     yield $key => static fn (): Response => $semaphore->waitFor($connector->send($request));
-                } elseif (is_callable($request)) {
+                } elseif (\is_callable($request)) {
                     yield $key => static fn (): Response => $semaphore->waitFor($request($connector));
                 } else {
                     throw new \InvalidArgumentException('Each value of the iterator must be a Jenky\Atlas\Request or a \Closure that returns a Jenky\Atlas\Response object.');

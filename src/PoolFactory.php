@@ -78,7 +78,7 @@ final class PoolFactory
      */
     private function assertConnector(ConnectorInterface $connector): void
     {
-        if (! method_exists($connector, 'withClient')) {
+        if (! \method_exists($connector, 'withClient')) {
             // @codeCoverageIgnoreStart
             throw new \LogicException('Unable to swap the underlying client of connector '.get_debug_type($connector));
             // @codeCoverageIgnoreEnd
@@ -112,12 +112,12 @@ final class PoolFactory
 
     private function isReactInstalled(): bool
     {
-        return function_exists('React\\Async\\async') && class_exists(Queue::class);
+        return \function_exists('React\\Async\\async') && \class_exists(Queue::class);
     }
 
     private function isPslInstalled(): bool
     {
-        return class_exists(Awaitable::class);
+        return \class_exists(Awaitable::class);
     }
 
     private function createReactPool(ConnectorInterface $connector): React\Pool
@@ -134,13 +134,13 @@ final class PoolFactory
             $newClient = new React\SymfonyClient($this->getUnderlyingSymfonyHttpClient($client));
         } elseif ($client instanceof ClientInterface) {
             $newClient = new React\GuzzleClient($client);
-        } elseif (class_exists(Browser::class)) {
+        } elseif (\class_exists(Browser::class)) {
             $newClient = new React\Client();
         } else {
             // @codeCoverageIgnoreStart
-            throw new UnsupportedClientException(sprintf(
+            throw new UnsupportedClientException(\sprintf(
                 'The concurrent requests feature cannot be used as the client %s is not supported. To utilize this feature, please install package "react/http".',
-                get_debug_type($client)
+                \get_debug_type($client)
             ));
             // @codeCoverageIgnoreEnd
         }
@@ -163,9 +163,9 @@ final class PoolFactory
         } elseif ($client instanceof ClientInterface) {
             $newClient = new Psl\GuzzleClient($client);
         } else {
-            throw new UnsupportedClientException(sprintf(
+            throw new UnsupportedClientException(\sprintf(
                 'The client %s is not supported. The PSL Pool only supports "guzzlehttp/guzzle" and "symfony/http-client".',
-                get_debug_type($client)
+                \get_debug_type($client)
             ));
         }
 
