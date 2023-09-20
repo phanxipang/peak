@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool;
 
-use Jenky\Concurrency\PoolInterface;
-
 trait PoolTrait
 {
     /**
-     * @var positive-int
+     * @var int<1, max>
      */
     private int $concurrency = 25;
 
     /**
-     * @param positive-int $concurrency
+     * @param  int<1, max> $concurrency
      *
      * @throws \ValueError
      */

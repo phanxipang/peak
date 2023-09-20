@@ -2,24 +2,44 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool;
+namespace Jenky\Atlas\Pool\Client;
 
+use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\Exception\NetworkException;
-use Jenky\Atlas\Pool\Exception\RequestException;
+use Jenky\Atlas\Exception\RequestException;
+use Jenky\Atlas\Pool\Concurrency\Deferrable;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Response\StreamableInterface;
 use Symfony\Component\HttpClient\Response\StreamWrapper;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyResponseInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
-trait SymfonyClientTrait
+final class SymfonyClient implements AsyncClientInterface, ResetInterface
 {
-    /**
-     * @param \Closure(): ResponseInterface $response
-     */
-    abstract private function createResponse(\Closure $response): mixed;
+    use AsyncClientTrait;
+
+    private HttpClientInterface $client;
+
+    private ResponseFactoryInterface $responseFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        private readonly Deferrable $deferred,
+        ?HttpClientInterface $client = null,
+        ?ResponseFactoryInterface $responseFactory = null,
+        ?StreamFactoryInterface $streamFactory = null,
+    ) {
+        $this->client = $client ?? HttpClient::create();
+        $this->responseFactory = $responseFactory ?? Psr17FactoryDiscovery::findResponseFactory();
+        $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
+    }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
@@ -41,7 +61,7 @@ trait SymfonyClientTrait
 
             $response = $this->client->request($request->getMethod(), (string) $request->getUri(), $options);
 
-            return $this->createResponse(fn () => $this->convertToPsrResponse($response));
+            return $this->createResponse($response);
             // @codeCoverageIgnoreStart
         } catch (TransportExceptionInterface $e) {
             if ($e instanceof \InvalidArgumentException) {
@@ -51,6 +71,17 @@ trait SymfonyClientTrait
             throw new NetworkException($e->getMessage(), $request, $e);
         }
         // @codeCoverageIgnoreEnd
+    }
+
+    private function createResponse(SymfonyResponseInterface $response): mixed
+    {
+        return $this->deferred->defer(function (callable $resolve, callable $reject) use ($response) {
+            try {
+                $resolve($this->convertToPsrResponse($response));
+            } catch (\Throwable $e) {
+                $reject($e);
+            }
+        });
     }
 
     private function convertToPsrResponse(SymfonyResponseInterface $response): ResponseInterface
@@ -81,6 +112,11 @@ trait SymfonyClientTrait
         }
 
         return $psrResponse->withBody($body);
+    }
+
+    private function getDeferrable(): Deferrable
+    {
+        return $this->deferred;
     }
 
     /**

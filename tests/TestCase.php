@@ -5,35 +5,52 @@ declare(strict_types=1);
 namespace Jenky\Atlas\Pool\Tests;
 
 use Jenky\Atlas\Contracts\ConnectorInterface;
+use Jenky\Atlas\GenericConnector;
 use Jenky\Atlas\Middleware\Interceptor;
-use Jenky\Atlas\NullConnector;
+use Jenky\Atlas\Pool\Client\AsyncClientInterface;
+use Jenky\Atlas\Pool\Pool;
+use Jenky\Atlas\Pool\PoolInterface;
 use Jenky\Atlas\Response;
-use Jenky\Concurrency\PoolInterface;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class TestCase extends BaseTestCase
 {
-    abstract protected function createPool(ConnectorInterface $connector): PoolInterface;
+    use TestRequestTrait;
 
-    protected function createRequests(int $total): iterable
+    abstract protected function createPoolFromClient(AsyncClientInterface $client): PoolInterface;
+
+    protected function createPool(ConnectorInterface|AsyncClientInterface $client): PoolInterface
     {
-        for ($i = 1; $i <= $total; $i++) {
-            yield new AkamaiTileRequest($i);
+        if ($client instanceof AsyncClientInterface) {
+            return $this->createPoolFromClient($client);
         }
+
+        return new Pool($client);
     }
 
     protected function createConnector(?ClientInterface $client = null): ConnectorInterface
     {
-        $connector = new NullConnector();
+        $connector = new GenericConnector();
 
         return $client ? $connector->withClient($client) : $connector;
     }
 
-    protected function performTests(ConnectorInterface $connector, int $totalRequests = 100): void
+    protected function performClientTests(AsyncClientInterface $client): void
     {
-        $total = (int) getenv('TEST_TOTAL_CONCURRENT_REQUESTS') ?: $totalRequests;
+        $total = (int) getenv('TEST_TOTAL_CONCURRENT_REQUESTS') ?: 100;
+
+        $responses = $this->createPool($client)
+            ->send($this->createPsrRequests($total));
+
+        $this->assertCount($total, $responses);
+        $this->assertInstanceOf(ResponseInterface::class, $responses[0]);
+    }
+
+    protected function performConnectorTests(ConnectorInterface $connector): void
+    {
+        $total = (int) getenv('TEST_TOTAL_CONCURRENT_REQUESTS') ?: 100;
 
         $connector->middleware()->push(
             Interceptor::response(function (ResponseInterface $response) {

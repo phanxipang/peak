@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\React;
+namespace Jenky\Atlas\Pool\Client;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use React\Async;
 use React\Http\Browser;
 
-final class Client implements AsyncClientInterface
+final class ReactClient implements AsyncClientInterface
 {
     private Browser $browser;
 
@@ -30,5 +30,10 @@ final class Client implements AsyncClientInterface
                 (string) $request->getBody()
             )
         );
+    }
+
+    public function driver(): int
+    {
+        return self::DRIVER_REACT;
     }
 }
