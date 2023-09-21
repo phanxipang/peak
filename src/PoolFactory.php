@@ -11,12 +11,12 @@ use Psr\Http\Client\ClientInterface;
 
 class PoolFactory
 {
-    public static function createForClient(ClientInterface $client): PoolInterface
+    public static function createForClient(ClientInterface $client): Pool
     {
-        return new Pool(Factory::createAsyncClient($client));
+        return new ClientPool(Factory::createAsyncClient($client));
     }
 
-    public static function createForConnector(ConnectorInterface $connector): PoolInterface
+    public static function createForConnector(ConnectorInterface $connector): Pool
     {
         $client = $connector->client();
 

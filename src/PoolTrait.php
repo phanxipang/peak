@@ -23,7 +23,7 @@ trait PoolTrait
      *
      * @throws \ValueError
      */
-    public function concurrent(int $concurrency): PoolInterface
+    public function concurrent(int $concurrency): Pool
     {
         if ($concurrency < 1) {
             throw new \ValueError('Argument #1 ($concurrency) must be positive, got '.$concurrency);

@@ -9,7 +9,7 @@ use Jenky\Atlas\GenericConnector;
 use Jenky\Atlas\Middleware\Interceptor;
 use Jenky\Atlas\Pool\Client\AsyncClientInterface;
 use Jenky\Atlas\Pool\ConnectorPool;
-use Jenky\Atlas\Pool\Pool;
+use Jenky\Atlas\Pool\ClientPool;
 use Jenky\Atlas\Response;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;
@@ -30,7 +30,7 @@ abstract class TestCase extends BaseTestCase
     {
         $total = (int) getenv('TEST_TOTAL_CONCURRENT_REQUESTS') ?: 100;
 
-        $responses = (new Pool($client))
+        $responses = (new ClientPool($client))
             ->send($this->createPsrRequests($total));
 
         $this->assertCount($total, $responses);

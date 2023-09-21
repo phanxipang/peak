@@ -12,7 +12,7 @@ use Jenky\Atlas\Pool\Client\GuzzleClient;
 use Jenky\Atlas\Pool\Client\SymfonyClient;
 use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\PoolFactory;
-use Jenky\Atlas\Pool\PoolInterface;
+use Jenky\Atlas\Pool\Pool;
 use Jenky\Atlas\Pool\PoolTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
@@ -44,7 +44,7 @@ final class PoolTest extends TestCase
         $this->assertInstanceOf(SymfonyClient::class, $client);
     }
 
-    private function getClientFromPool(PoolInterface $pool): ClientInterface
+    private function getClientFromPool(Pool $pool): ClientInterface
     {
         $reflection = new \ReflectionProperty($pool, 'connector');
         $reflection->setAccessible(true);
@@ -90,7 +90,7 @@ final class PoolTest extends TestCase
     // }
 }
 
-final class NullPool implements PoolInterface
+final class NullPool implements Pool
 {
     use PoolTrait;
 

@@ -15,7 +15,7 @@ use Psr\Http\Client\ClientInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class Factory
+class Factory
 {
     /**
      * Create new async version of the given client.

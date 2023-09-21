@@ -12,9 +12,9 @@ use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
 
 /**
- * @implements PoolInterface<Request|callable(ConnectorInterface): Response, Response>
+ * @implements Pool<Request|callable(ConnectorInterface): Response, Response>
  */
-final class ConnectorPool implements PoolInterface
+final class ConnectorPool implements Pool
 {
     use PoolTrait;
 

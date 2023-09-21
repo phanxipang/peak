@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool\Concurrency;
 
+/**
+ * @template-covariant T
+ */
 interface Deferrable
 {
     /**
-     * @template T
+     * Defer the operation.
      *
      * @param  callable(\Closure(T): void, \Closure(\Throwable): void): void $callback
      * @return T
