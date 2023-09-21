@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool;
+namespace Fansipan\Concurrent;
 
-use Jenky\Atlas\Pool\Client\AsyncClientInterface;
-use Jenky\Atlas\Pool\Concurrency\Driver;
-use Jenky\Atlas\Pool\Concurrency\PslConcurrency;
-use Jenky\Atlas\Pool\Concurrency\ReactConcurrency;
-use Jenky\Atlas\Pool\Concurrency\Runner;
-use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
+use Fansipan\Concurrent\Client\AsyncClientInterface;
+use Fansipan\Concurrent\Concurrency\Driver;
+use Fansipan\Concurrent\Concurrency\PslConcurrency;
+use Fansipan\Concurrent\Concurrency\ReactConcurrency;
+use Fansipan\Concurrent\Concurrency\Runner;
+use Fansipan\Concurrent\Exception\UnsupportedFeatureException;
 
 trait PoolTrait
 {

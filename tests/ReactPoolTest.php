@@ -1,11 +1,11 @@
 <?php
 
-namespace Jenky\Atlas\Pool\Tests;
+namespace Fansipan\Concurrent\Tests;
 
-use Jenky\Atlas\Pool\Client\GuzzleClient;
-use Jenky\Atlas\Pool\Client\ReactClient;
-use Jenky\Atlas\Pool\Client\SymfonyClient;
-use Jenky\Atlas\Pool\Concurrency\ReactDeferred;
+use Fansipan\Concurrent\Client\GuzzleClient;
+use Fansipan\Concurrent\Client\ReactClient;
+use Fansipan\Concurrent\Client\SymfonyClient;
+use Fansipan\Concurrent\Concurrency\ReactDeferred;
 
 final class ReactPoolTest extends TestCase
 {

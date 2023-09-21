@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Client;
+namespace Fansipan\Concurrent\Client;
 
+use Fansipan\Concurrent\Concurrency\Driver;
+use Fansipan\Concurrent\Concurrency\DriverDiscovery;
+use Fansipan\Concurrent\Concurrency\PslDeferred;
+use Fansipan\Concurrent\Concurrency\ReactDeferred;
+use Fansipan\Concurrent\Exception\UnsupportedClientException;
+use Fansipan\Concurrent\Exception\UnsupportedFeatureException;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
-use Jenky\Atlas\Pool\Concurrency\Driver;
-use Jenky\Atlas\Pool\Concurrency\DriverDiscovery;
-use Jenky\Atlas\Pool\Concurrency\PslDeferred;
-use Jenky\Atlas\Pool\Concurrency\ReactDeferred;
-use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
-use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -20,8 +20,8 @@ class Factory
     /**
      * Create new async version of the given client.
      *
-     * @throws \Jenky\Atlas\Pool\Exception\UnsupportedClientException
-     * @throws \Jenky\Atlas\Pool\Exception\UnsupportedFeatureException
+     * @throws \Fansipan\Concurrent\Exception\UnsupportedClientException
+     * @throws \Fansipan\Concurrent\Exception\UnsupportedFeatureException
      */
     public static function createAsyncClient(ClientInterface $client): AsyncClientInterface
     {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Client;
+namespace Fansipan\Concurrent\Client;
 
-use Jenky\Atlas\Pool\Concurrency\Deferrable;
-use Jenky\Atlas\Pool\Concurrency\Driver;
-use Jenky\Atlas\Pool\Concurrency\PslDeferred;
-use Jenky\Atlas\Pool\Concurrency\ReactDeferred;
+use Fansipan\Concurrent\Concurrency\Deferrable;
+use Fansipan\Concurrent\Concurrency\Driver;
+use Fansipan\Concurrent\Concurrency\PslDeferred;
+use Fansipan\Concurrent\Concurrency\ReactDeferred;
 
 trait AsyncClientTrait
 {

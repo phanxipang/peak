@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Tests;
+namespace Fansipan\Concurrent\Tests;
 
+use Fansipan\Concurrent\Client\AsyncClientInterface;
+use Fansipan\Concurrent\ClientPool;
+use Fansipan\Concurrent\ConnectorPool;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\GenericConnector;
 use Jenky\Atlas\Middleware\Interceptor;
-use Jenky\Atlas\Pool\Client\AsyncClientInterface;
-use Jenky\Atlas\Pool\ClientPool;
-use Jenky\Atlas\Pool\ConnectorPool;
 use Jenky\Atlas\Response;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;

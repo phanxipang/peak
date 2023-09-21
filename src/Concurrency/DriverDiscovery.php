@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Concurrency;
+namespace Fansipan\Concurrent\Concurrency;
 
 use Clue\React\Mq\Queue;
 use Psl\Async\Awaitable;

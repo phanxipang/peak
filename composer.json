@@ -1,16 +1,18 @@
 {
-    "name": "jenky/atlas-pool",
-    "description": "Send concurrent requests for Atlas",
+    "name": "fansipan/concurrent",
+    "description": "A simple and efficient solution for concurrently sending HTTP requests using PSR-18 client implementations.",
     "keywords": [
-        "jenky",
-        "atlas",
+        "concurrently",
         "pool",
+        "http",
+        "request",
+        "response",
         "concurrent-requests",
         "parallel-requests",
         "async",
         "await"
     ],
-    "homepage": "https://github.com/jenky/atlas-pool",
+    "homepage": "https://github.com/phansipang/concurrent",
     "license": "MIT",
     "authors": [
         {
@@ -37,12 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Jenky\\Atlas\\Pool\\": "src"
+            "Fansipan\\Concurrent\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Jenky\\Atlas\\Pool\\Tests\\": "tests"
+            "Fansipan\\Concurrent\\Tests\\": "tests"
         }
     },
     "scripts": {

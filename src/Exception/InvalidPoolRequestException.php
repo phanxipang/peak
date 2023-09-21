@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Exception;
+namespace Fansipan\Concurrent\Exception;
 
 final class InvalidPoolRequestException extends \InvalidArgumentException
 {

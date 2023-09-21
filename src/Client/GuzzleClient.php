@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Client;
+namespace Fansipan\Concurrent\Client;
 
+use Fansipan\Concurrent\Concurrency\Deferrable;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
-use Jenky\Atlas\Pool\Concurrency\Deferrable;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

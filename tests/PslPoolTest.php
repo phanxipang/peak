@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Tests;
+namespace Fansipan\Concurrent\Tests;
 
-use Jenky\Atlas\Pool\Client\GuzzleClient;
-use Jenky\Atlas\Pool\Client\SymfonyClient;
-use Jenky\Atlas\Pool\Concurrency\PslDeferred;
+use Fansipan\Concurrent\Client\GuzzleClient;
+use Fansipan\Concurrent\Client\SymfonyClient;
+use Fansipan\Concurrent\Concurrency\PslDeferred;
 
 final class PslPoolTest extends TestCase
 {

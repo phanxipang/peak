@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool;
+namespace Fansipan\Concurrent;
 
 /**
  * @template TReq

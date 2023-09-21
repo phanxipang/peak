@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool;
+namespace Fansipan\Concurrent;
 
-use Jenky\Atlas\Pool\Client\AsyncClientInterface;
-use Jenky\Atlas\Pool\Exception\InvalidPoolRequestException;
+use Fansipan\Concurrent\Client\AsyncClientInterface;
+use Fansipan\Concurrent\Exception\InvalidPoolRequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Tests;
+namespace Fansipan\Concurrent\Tests;
 
+use Fansipan\Concurrent\Client\Factory;
+use Fansipan\Concurrent\Client\GuzzleClient;
+use Fansipan\Concurrent\Client\ReactClient;
+use Fansipan\Concurrent\Client\SymfonyClient;
+use Fansipan\Concurrent\Concurrency\Driver;
+use Fansipan\Concurrent\Concurrency\DriverDiscovery;
+use Fansipan\Concurrent\ConnectorPool;
+use Fansipan\Concurrent\Exception\UnsupportedClientException;
+use Fansipan\Concurrent\Pool;
+use Fansipan\Concurrent\PoolFactory;
+use Fansipan\Concurrent\PoolTrait;
 use GuzzleHttp\Client;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\GenericConnector;
-use Jenky\Atlas\Pool\Client\Factory;
-use Jenky\Atlas\Pool\Client\GuzzleClient;
-use Jenky\Atlas\Pool\Client\ReactClient;
-use Jenky\Atlas\Pool\Client\SymfonyClient;
-use Jenky\Atlas\Pool\Concurrency\Driver;
-use Jenky\Atlas\Pool\Concurrency\DriverDiscovery;
-use Jenky\Atlas\Pool\ConnectorPool;
-use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
-use Jenky\Atlas\Pool\Pool;
-use Jenky\Atlas\Pool\PoolFactory;
-use Jenky\Atlas\Pool\PoolTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;

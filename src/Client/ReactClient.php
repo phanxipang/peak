@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Client;
+namespace Fansipan\Concurrent\Client;
 
-use Jenky\Atlas\Pool\Concurrency\Driver;
+use Fansipan\Concurrent\Concurrency\Driver;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use React\Async;

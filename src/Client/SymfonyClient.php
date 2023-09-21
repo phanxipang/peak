@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Client;
+namespace Fansipan\Concurrent\Client;
 
+use Fansipan\Concurrent\Concurrency\Deferrable;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\Exception\NetworkException;
 use Jenky\Atlas\Exception\RequestException;
-use Jenky\Atlas\Pool\Concurrency\Deferrable;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

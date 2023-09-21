@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool;
+namespace Fansipan\Concurrent;
 
+use Fansipan\Concurrent\Client\AsyncClientInterface;
+use Fansipan\Concurrent\Client\Factory;
 use Jenky\Atlas\Contracts\ConnectorInterface;
-use Jenky\Atlas\Pool\Client\AsyncClientInterface;
-use Jenky\Atlas\Pool\Client\Factory;
 use Psr\Http\Client\ClientInterface;
 
 class PoolFactory
