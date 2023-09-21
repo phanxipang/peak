@@ -19,10 +19,10 @@ final class ReactPoolTest extends TestCase
         return new GuzzleClient(new ReactDeferred());
     }
 
-    // public function test_react_pool_using_react_browser(): void
-    // {
-    //     $this->performConnectorTests($this->createConnector(new ReactClient()));
-    // }
+    public function test_react_pool_using_react_browser(): void
+    {
+        $this->performConnectorTests($this->createConnector(new ReactClient()));
+    }
 
     public function test_react_pool_using_symfony_http_client(): void
     {
