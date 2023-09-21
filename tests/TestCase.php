@@ -8,8 +8,8 @@ use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\GenericConnector;
 use Jenky\Atlas\Middleware\Interceptor;
 use Jenky\Atlas\Pool\Client\AsyncClientInterface;
+use Jenky\Atlas\Pool\ConnectorPool;
 use Jenky\Atlas\Pool\Pool;
-use Jenky\Atlas\Pool\PoolInterface;
 use Jenky\Atlas\Response;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;
@@ -18,17 +18,6 @@ use Psr\Http\Message\ResponseInterface;
 abstract class TestCase extends BaseTestCase
 {
     use TestRequestTrait;
-
-    abstract protected function createPoolFromClient(AsyncClientInterface $client): PoolInterface;
-
-    protected function createPool(ConnectorInterface|AsyncClientInterface $client): PoolInterface
-    {
-        if ($client instanceof AsyncClientInterface) {
-            return $this->createPoolFromClient($client);
-        }
-
-        return new Pool($client);
-    }
 
     protected function createConnector(?ClientInterface $client = null): ConnectorInterface
     {
@@ -41,7 +30,7 @@ abstract class TestCase extends BaseTestCase
     {
         $total = (int) getenv('TEST_TOTAL_CONCURRENT_REQUESTS') ?: 100;
 
-        $responses = $this->createPool($client)
+        $responses = (new Pool($client))
             ->send($this->createPsrRequests($total));
 
         $this->assertCount($total, $responses);
@@ -58,7 +47,7 @@ abstract class TestCase extends BaseTestCase
             })
         );
 
-        $responses = $this->createPool($connector)
+        $responses = (new ConnectorPool($connector))
             ->send($this->createRequests($total));
 
         $this->assertCount($total, $responses);

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Jenky\Atlas\Pool\Client;
 
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use Jenky\Atlas\Pool\Concurrency\Driver;
+use Jenky\Atlas\Pool\Concurrency\DriverDiscovery;
 use Jenky\Atlas\Pool\Concurrency\PslDeferred;
 use Jenky\Atlas\Pool\Concurrency\ReactDeferred;
 use Jenky\Atlas\Pool\Exception\UnsupportedClientException;
 use Jenky\Atlas\Pool\Exception\UnsupportedFeatureException;
-use Jenky\Atlas\Pool\Util;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -24,7 +25,9 @@ final class Factory
      */
     public static function createAsyncClient(ClientInterface $client): AsyncClientInterface
     {
-        if (Util::isPslInstalled()) {
+        $driver = DriverDiscovery::find();
+
+        if ($driver === Driver::PSL) {
             if ($client instanceof GuzzleClientInterface) {
                 return new GuzzleClient(new PslDeferred(), $client);
             }
@@ -39,7 +42,7 @@ final class Factory
             ));
         }
 
-        if (Util::isReactInstalled()) {
+        if ($driver === Driver::REACT) {
             if ($client instanceof GuzzleClientInterface) {
                 return new GuzzleClient(new ReactDeferred(), $client);
             }
@@ -58,7 +61,9 @@ final class Factory
             ));
         }
 
-        throw new UnsupportedFeatureException('You cannot use the concurrent request pool feature as the required packages are not installed.');
+        // @codeCoverageIgnoreStart
+        throw new UnsupportedFeatureException('You cannot use the concurrent request pool feature as the required packages are not installed.'); // @phpstan-ignore-line
+        // @codeCoverageIgnoreEnd
     }
 
     private static function getUnderlyingSymfonyHttpClient(Psr18Client $client): ?HttpClientInterface

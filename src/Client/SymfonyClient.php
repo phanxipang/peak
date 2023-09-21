@@ -75,7 +75,7 @@ final class SymfonyClient implements AsyncClientInterface, ResetInterface
 
     private function createResponse(SymfonyResponseInterface $response): mixed
     {
-        return $this->deferred->defer(function (callable $resolve, callable $reject) use ($response) {
+        return $this->deferred->defer(function (\Closure $resolve, \Closure $reject) use ($response) {
             try {
                 $resolve($this->convertToPsrResponse($response));
             } catch (\Throwable $e) {

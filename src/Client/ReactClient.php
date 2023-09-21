@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jenky\Atlas\Pool\Client;
 
+use Jenky\Atlas\Pool\Concurrency\Driver;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use React\Async;
@@ -32,8 +33,8 @@ final class ReactClient implements AsyncClientInterface
         );
     }
 
-    public function driver(): int
+    public function driver(): ?Driver
     {
-        return self::DRIVER_REACT;
+        return Driver::REACT;
     }
 }

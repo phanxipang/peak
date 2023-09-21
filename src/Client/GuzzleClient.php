@@ -31,7 +31,7 @@ final class GuzzleClient implements AsyncClientInterface
             RequestOptions::HTTP_ERRORS => false,
         ]);
 
-        return $this->deferred->defer(static function (callable $resolve, callable $reject) use ($promise) {
+        return $this->deferred->defer(static function (\Closure $resolve, \Closure $reject) use ($promise) {
             $promise->then(
                 fn (ResponseInterface $response) => $resolve($response),
                 fn (\Throwable $e) => $reject($e)
