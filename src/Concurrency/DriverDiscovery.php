@@ -11,7 +11,7 @@ final class DriverDiscovery
 {
     private static ?Driver $cached = null;
 
-    private static ?Driver $prefer = null;
+    private static ?Driver $preferred = null;
 
     /**
      * Find the appropriate async driver based on the installed package.
@@ -20,8 +20,8 @@ final class DriverDiscovery
      */
     public static function find(bool $cacheResult = true): Driver
     {
-        if (self::$prefer !== null) {
-            return self::$prefer;
+        if (self::$preferred !== null) {
+            return self::$preferred;
         }
 
         if ($cacheResult && self::$cached !== null) {
@@ -48,7 +48,7 @@ final class DriverDiscovery
      */
     public static function prefer(Driver $driver): void
     {
-        self::$prefer = $driver;
+        self::$preferred = $driver;
     }
 
     public static function isReactInstalled(): bool
