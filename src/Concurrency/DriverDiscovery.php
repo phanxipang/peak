@@ -54,11 +54,13 @@ final class DriverDiscovery
         };
 
         if (! $check) {
+            // @codeCoverageIgnoreStart
             throw new \InvalidArgumentException(\sprintf(
                 'You cannot use the driver %s as required packages are not installed. Try running "composer require %s"',
                 $driver->name,
                 $driver->value
             ));
+            // @codeCoverageIgnoreEnd
         }
 
         self::$preferred = $driver;
