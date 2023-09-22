@@ -33,8 +33,8 @@ final class GuzzleClient implements AsyncClientInterface
 
         return $this->deferred->defer(static function (\Closure $resolve, \Closure $reject) use ($promise) {
             $promise->then(
-                fn (ResponseInterface $response) => $resolve($response),
-                fn (\Throwable $e) => $reject($e)
+                static fn (ResponseInterface $response) => $resolve($response),
+                static fn (\Throwable $e) => $reject($e)
             )->wait();
         });
     }
