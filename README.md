@@ -14,7 +14,7 @@ A powerful tool that allows you to send multiple HTTP requests simultaneously.
 You can install the package via composer:
 
 ```bash
-composer require phanxipang/concurrent
+composer require fansipan/concurrent
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT
 
 ## Security
 
-If you discover any security related issues, please email jenky.w0w@gmail.com instead of using the issue tracker.
+If you discover any security related issues, please email contact@lynh.me instead of using the issue tracker.
 
 ## Credits
 
