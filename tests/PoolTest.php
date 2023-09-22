@@ -11,6 +11,7 @@ use Fansipan\Concurrent\Client\SymfonyClient;
 use Fansipan\Concurrent\Concurrency\Driver;
 use Fansipan\Concurrent\Concurrency\DriverDiscovery;
 use Fansipan\Concurrent\ConnectorPool;
+use Fansipan\Concurrent\Exception\InvalidPoolRequestException;
 use Fansipan\Concurrent\Exception\UnsupportedClientException;
 use Fansipan\Concurrent\Pool;
 use Fansipan\Concurrent\PoolFactory;
@@ -46,6 +47,24 @@ final class PoolTest extends TestCase
 
         $client = Factory::createAsyncClient(new Psr18Client());
         $this->assertInstanceOf(SymfonyClient::class, $client);
+    }
+
+    public function test_invalid_pool_request(): void
+    {
+        $client = new ReactClient();
+
+        $clientPool = PoolFactory::createForClient($client);
+
+        $this->expectException(InvalidPoolRequestException::class);
+
+        $clientPool->send([1, 2, 3]);
+
+        $connectorPool = PoolFactory::createForConnector(
+            (new GenericConnector())->withClient($client)
+        );
+
+        $this->expectException(InvalidPoolRequestException::class);
+        $connectorPool->send([1, fn () => new \stdClass]);
     }
 
     public function test_create_pool_using_unsupported_client(): void

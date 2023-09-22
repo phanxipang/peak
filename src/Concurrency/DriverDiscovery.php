@@ -14,7 +14,7 @@ final class DriverDiscovery
     private static ?Driver $preferred = null;
 
     /**
-     * Find the appropriate async driver based on the installed package.
+     * Find the appropriate async driver based on the installed packages.
      *
      * @throws \RuntimeException
      */
