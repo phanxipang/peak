@@ -55,7 +55,7 @@ final class DelayTest extends TestCase
 
     public function test_react_delay(): void
     {
-        $request = $this->requestFactory->createRequest('GET', 'http://localhost');
+        $request = $this->requestFactory->createRequest('GET', 'https://example.com');
 
         $client = $this->mockSymfonyClient(new ReactDeferred());
 
@@ -78,7 +78,7 @@ final class DelayTest extends TestCase
     public function test_pool_psl_delay(): void
     {
         $this->runPoolDelayTests(
-            $client = $this->mockSymfonyClient(new PslDeferred()), 3
+            $this->mockSymfonyClient(new PslDeferred()), 3
         );
 
         $this->assertTrue(true);
