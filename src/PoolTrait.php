@@ -35,13 +35,13 @@ trait PoolTrait
         return $clone;
     }
 
-    private function getRunner(AsyncClientInterface $client): Runner
+    private function getRunner(AsyncClientInterface $client, ?\Closure $operation = null): Runner
     {
         $driver = $client->driver();
 
         return match (true) {
-            $driver === Driver::PSL => new PslConcurrency($this->concurrency),
-            $driver === Driver::REACT => new ReactConcurrency($this->concurrency),
+            $driver === Driver::PSL => new PslConcurrency($this->concurrency, $operation),
+            $driver === Driver::REACT => new ReactConcurrency($this->concurrency, $operation),
             default => throw new UnsupportedFeatureException('You cannot use the concurrent request pool feature as the required packages are not installed.'),
         };
     }
