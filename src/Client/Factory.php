@@ -25,6 +25,10 @@ class Factory
      */
     public static function createAsyncClient(ClientInterface $client): AsyncClientInterface
     {
+        if ($client instanceof AsyncClientInterface) {
+            return $client;
+        }
+
         $driver = DriverDiscovery::find();
 
         if ($driver === Driver::PSL) {

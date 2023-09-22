@@ -11,6 +11,10 @@ use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
 
+if (! \interface_exists(ConnectorInterface::class)) {
+    throw new \LogicException('You cannot use the ConnectorPool as the "fansipan/fansipan" package is not installed.');
+}
+
 /**
  * @implements Pool<Request|callable(ConnectorInterface): Response, Response>
  */

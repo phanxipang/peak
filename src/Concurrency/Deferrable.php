@@ -10,10 +10,11 @@ namespace Fansipan\Concurrent\Concurrency;
 interface Deferrable
 {
     /**
-     * Defer the operation.
+     * Defer the operation with optional delay in seconds.
      *
      * @param  callable(\Closure(T): void, \Closure(\Throwable): void): void $callback
+     * @parma  float<0, max> $delay
      * @return T
      */
-    public function defer(callable $callback): mixed;
+    public function defer(callable $callback, float $delay = 0): mixed;
 }

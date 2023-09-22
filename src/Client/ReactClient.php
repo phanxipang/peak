@@ -12,6 +12,8 @@ use React\Http\Browser;
 
 final class ReactClient implements AsyncClientInterface
 {
+    use DelayTrait;
+
     private Browser $browser;
 
     public function __construct(?Browser $browser = null)
@@ -23,6 +25,12 @@ final class ReactClient implements AsyncClientInterface
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
+        $delay = $this->getDelay(true);
+
+        if ($delay > 0) {
+            Async\delay($delay);
+        }
+
         return Async\await(
             $this->browser->request(
                 $request->getMethod(),

@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 final class GuzzleClient implements AsyncClientInterface
 {
     use AsyncClientTrait;
+    use DelayTrait;
 
     private ClientInterface $client;
 
@@ -36,7 +37,7 @@ final class GuzzleClient implements AsyncClientInterface
                 static fn (ResponseInterface $response) => $resolve($response),
                 static fn (\Throwable $e) => $reject($e)
             )->wait();
-        });
+        }, $this->getDelay(true));
     }
 
     private function getDeferrable(): Deferrable

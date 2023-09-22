@@ -18,14 +18,15 @@ final class ReactDeferred implements Deferrable
         $this->loop = $loop ?: Loop::get();
     }
 
-    public function defer(callable $callback): mixed
+    public function defer(callable $callback, float $delay = 0): mixed
     {
         $defer = new Deferred();
 
-        $this->loop->futureTick(static function () use ($defer, $callback) {
+        $this->loop->futureTick(function () use ($defer, $callback, $delay) {
             $resolve = static fn (mixed $value) => $defer->resolve($value);
             $reject = static fn (\Throwable $e) => $defer->reject($e);
-            $callback($resolve, $reject);
+
+            $this->loop->addTimer($delay, static fn () => $callback($resolve, $reject));
         });
 
         return Async\await($defer->promise());

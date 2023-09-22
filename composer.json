@@ -27,17 +27,18 @@
         "psr/http-factory": "^1.0"
     },
     "require-dev": {
-        "jenky/atlas": "^0.5",
         "azjezz/psl": "^2.7",
         "clue/mq-react": "^1.6",
+        "fansipan/mock-client": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.15",
         "guzzlehttp/guzzle": "^7.5",
-        "fansipan/mock-client": "^1.0",
+        "jenky/atlas": "^0.5",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.0",
         "react/async": "^4.1",
         "react/http": "^1.9",
-        "symfony/http-client": "^6.3"
+        "symfony/http-client": "^6.3",
+        "symfony/var-dumper": "^6.3"
     },
     "autoload": {
         "psr-4": {

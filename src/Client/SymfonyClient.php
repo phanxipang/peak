@@ -23,6 +23,7 @@ use Symfony\Contracts\Service\ResetInterface;
 final class SymfonyClient implements AsyncClientInterface, ResetInterface
 {
     use AsyncClientTrait;
+    use DelayTrait;
 
     private HttpClientInterface $client;
 
@@ -81,7 +82,7 @@ final class SymfonyClient implements AsyncClientInterface, ResetInterface
             } catch (\Throwable $e) {
                 $reject($e);
             }
-        });
+        }, $this->getDelay(true));
     }
 
     private function convertToPsrResponse(SymfonyResponseInterface $response): ResponseInterface
