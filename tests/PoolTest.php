@@ -64,7 +64,7 @@ final class PoolTest extends TestCase
         );
 
         $this->expectException(InvalidPoolRequestException::class);
-        $connectorPool->send([1, fn () => new \stdClass]);
+        $connectorPool->send([1, fn () => new \stdClass()]);
     }
 
     public function test_create_pool_using_unsupported_client(): void
