@@ -12,7 +12,9 @@ use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
 
 if (! \interface_exists(ConnectorInterface::class)) {
+    // @codeCoverageIgnoreStart
     throw new \LogicException('You cannot use the ConnectorPool as the "fansipan/fansipan" package is not installed.');
+    // @codeCoverageIgnoreEnd
 }
 
 /**

@@ -40,6 +40,15 @@ final class PoolTest extends TestCase
         $pool->concurrent(-1);
     }
 
+    public function test_driver_discovery(): void
+    {
+        $this->assertSame(Driver::PSL, DriverDiscovery::find(false));
+
+        DriverDiscovery::prefer(Driver::REACT);
+
+        $this->assertSame(Driver::REACT, DriverDiscovery::find(false));
+    }
+
     public function test_async_client_factory(): void
     {
         $client = Factory::createAsyncClient(new Client());
@@ -67,7 +76,7 @@ final class PoolTest extends TestCase
         $connectorPool->send([1, fn () => new \stdClass()]);
     }
 
-    public function test_create_pool_using_unsupported_client(): void
+    public function test_pool_factory(): void
     {
         $pool = PoolFactory::createForConnector((new GenericConnector())->withClient(new Client()));
         $this->assertInstanceOf(GuzzleClient::class, $this->getClientFromPool($pool));
@@ -79,6 +88,7 @@ final class PoolTest extends TestCase
         $pool = PoolFactory::createForClient(new FakeHttpClient());
 
         DriverDiscovery::prefer(Driver::REACT);
+
         $pool = PoolFactory::createForClient(Factory::createAsyncClient(new FakeHttpClient()));
         $this->assertInstanceOf(ReactClient::class, $this->getClientFromPool($pool));
     }
