@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Fansipan\Concurrent\Concurrency;
 
-enum Driver
+enum Driver: string
 {
-    case PSL;
-    case REACT;
+    case PSL = 'azjezz/psl';
+    case REACT = 'react/async react/http';
 }

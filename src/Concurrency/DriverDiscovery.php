@@ -48,6 +48,19 @@ final class DriverDiscovery
      */
     public static function prefer(Driver $driver): void
     {
+        $check = match ($driver) {
+            Driver::PSL => self::isPslInstalled(),
+            Driver::REACT => self::isReactInstalled(),
+        };
+
+        if (! $check) {
+            throw new \InvalidArgumentException(\sprintf(
+                'You cannot use the driver %s as required packages are not installed. Try running "composer require %s"',
+                $driver->name,
+                $driver->value
+            ));
+        }
+
         self::$preferred = $driver;
     }
 
