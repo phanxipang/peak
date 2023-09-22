@@ -11,11 +11,23 @@ use Psr\Http\Client\ClientInterface;
 
 class PoolFactory
 {
+    /**
+     * Create a new pool for the given client.
+     *
+     * @throws \Fansipan\Peak\Exception\UnsupportedClientException
+     * @throws \Fansipan\Peak\Exception\UnsupportedFeatureException
+     */
     public static function createForClient(ClientInterface $client): Pool
     {
         return new ClientPool(AsyncClientFactory::create($client));
     }
 
+    /**
+     * Create a new pool for the given connector.
+     *
+     * @throws \Fansipan\Peak\Exception\UnsupportedClientException
+     * @throws \Fansipan\Peak\Exception\UnsupportedFeatureException
+     */
     public static function createForConnector(ConnectorInterface $connector): Pool
     {
         $client = $connector->client();
