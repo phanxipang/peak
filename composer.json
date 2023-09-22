@@ -1,5 +1,5 @@
 {
-    "name": "fansipan/concurrent",
+    "name": "fansipan/peak",
     "description": "A simple and efficient solution for concurrently sending HTTP requests using PSR-18 client implementations.",
     "keywords": [
         "concurrently",
@@ -12,7 +12,7 @@
         "async",
         "await"
     ],
-    "homepage": "https://github.com/phanxipang/concurrent",
+    "homepage": "https://github.com/phanxipang/peak",
     "license": "MIT",
     "authors": [
         {
@@ -42,12 +42,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Fansipan\\Concurrent\\": "src"
+            "Fansipan\\Peak\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Fansipan\\Concurrent\\Tests\\": "tests"
+            "Fansipan\\Peak\\Tests\\": "tests"
         }
     },
     "scripts": {

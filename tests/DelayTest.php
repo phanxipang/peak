@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Tests;
+namespace Fansipan\Peak\Tests;
 
-use Fansipan\Concurrent\Client\AsyncClientInterface;
-use Fansipan\Concurrent\Client\GuzzleClient;
-use Fansipan\Concurrent\Client\ReactClient;
-use Fansipan\Concurrent\Client\SymfonyClient;
-use Fansipan\Concurrent\Concurrency\Deferrable;
-use Fansipan\Concurrent\Concurrency\PslDeferred;
-use Fansipan\Concurrent\Concurrency\ReactDeferred;
-use Fansipan\Concurrent\PoolFactory;
 use Fansipan\Mock\MockResponse;
+use Fansipan\Peak\Client\AsyncClientInterface;
+use Fansipan\Peak\Client\GuzzleClient;
+use Fansipan\Peak\Client\ReactClient;
+use Fansipan\Peak\Client\SymfonyClient;
+use Fansipan\Peak\Concurrency\Deferrable;
+use Fansipan\Peak\Concurrency\PslDeferred;
+use Fansipan\Peak\Concurrency\ReactDeferred;
+use Fansipan\Peak\PoolFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;

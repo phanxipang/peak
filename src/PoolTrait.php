@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent;
+namespace Fansipan\Peak;
 
-use Fansipan\Concurrent\Client\AsyncClientInterface;
-use Fansipan\Concurrent\Concurrency\Driver;
-use Fansipan\Concurrent\Concurrency\PslConcurrency;
-use Fansipan\Concurrent\Concurrency\ReactConcurrency;
-use Fansipan\Concurrent\Concurrency\Runner;
-use Fansipan\Concurrent\Exception\UnsupportedFeatureException;
+use Fansipan\Peak\Client\AsyncClientInterface;
+use Fansipan\Peak\Concurrency\Driver;
+use Fansipan\Peak\Concurrency\PslConcurrency;
+use Fansipan\Peak\Concurrency\ReactConcurrency;
+use Fansipan\Peak\Concurrency\Runner;
+use Fansipan\Peak\Exception\UnsupportedFeatureException;
 
 trait PoolTrait
 {

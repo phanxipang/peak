@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Client;
+namespace Fansipan\Peak\Client;
 
-use Fansipan\Concurrent\Concurrency\Driver;
+use Fansipan\Peak\Concurrency\Driver;
 use Psr\Http\Client\ClientInterface;
 
 interface AsyncClientInterface extends ClientInterface

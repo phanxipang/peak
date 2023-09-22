@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Client;
+namespace Fansipan\Peak\Client;
 
-use Fansipan\Concurrent\Concurrency\Deferrable;
+use Fansipan\Peak\Concurrency\Deferrable;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\Exception\NetworkException;
 use Jenky\Atlas\Exception\RequestException;

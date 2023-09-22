@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Concurrency;
+namespace Fansipan\Peak\Concurrency;
 
 use Clue\React\Mq\Queue;
 use React\Async;

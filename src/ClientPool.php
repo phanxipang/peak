@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent;
+namespace Fansipan\Peak;
 
-use Fansipan\Concurrent\Client\AsyncClientInterface;
-use Fansipan\Concurrent\Exception\InvalidPoolRequestException;
+use Fansipan\Peak\Client\AsyncClientInterface;
+use Fansipan\Peak\Exception\InvalidPoolRequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

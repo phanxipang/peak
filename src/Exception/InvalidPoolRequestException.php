@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Exception;
+namespace Fansipan\Peak\Exception;
 
 final class InvalidPoolRequestException extends \InvalidArgumentException
 {

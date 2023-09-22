@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Concurrency;
+namespace Fansipan\Peak\Concurrency;
 
 interface Runner
 {

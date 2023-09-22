@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Client;
+namespace Fansipan\Peak\Client;
 
-use Fansipan\Concurrent\Concurrency\Driver;
+use Fansipan\Peak\Concurrency\Driver;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use React\Async;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Tests;
+namespace Fansipan\Peak\Tests;
 
 use Jenky\Atlas\Request;
 

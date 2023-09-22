@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Tests;
+namespace Fansipan\Peak\Tests;
 
-use Fansipan\Concurrent\Client\AsyncClientInterface;
-use Fansipan\Concurrent\ClientPool;
-use Fansipan\Concurrent\ConnectorPool;
+use Fansipan\Peak\Client\AsyncClientInterface;
+use Fansipan\Peak\ClientPool;
+use Fansipan\Peak\ConnectorPool;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\GenericConnector;
 use Jenky\Atlas\Middleware\Interceptor;

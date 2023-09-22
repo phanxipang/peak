@@ -2,29 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Client;
+namespace Fansipan\Peak\Client;
 
-use Fansipan\Concurrent\Concurrency\Driver;
-use Fansipan\Concurrent\Concurrency\DriverDiscovery;
-use Fansipan\Concurrent\Concurrency\PslDeferred;
-use Fansipan\Concurrent\Concurrency\ReactDeferred;
-use Fansipan\Concurrent\Exception\UnsupportedClientException;
-use Fansipan\Concurrent\Exception\UnsupportedFeatureException;
+use Fansipan\Peak\Concurrency\Driver;
+use Fansipan\Peak\Concurrency\DriverDiscovery;
+use Fansipan\Peak\Concurrency\PslDeferred;
+use Fansipan\Peak\Concurrency\ReactDeferred;
+use Fansipan\Peak\Exception\UnsupportedClientException;
+use Fansipan\Peak\Exception\UnsupportedFeatureException;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use Http\Discovery\Psr18ClientDiscovery;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class Factory
+class AsyncClientFactory
 {
     /**
      * Create new async version of the given client.
      *
-     * @throws \Fansipan\Concurrent\Exception\UnsupportedClientException
-     * @throws \Fansipan\Concurrent\Exception\UnsupportedFeatureException
+     * @throws \Fansipan\Peak\Exception\UnsupportedClientException
+     * @throws \Fansipan\Peak\Exception\UnsupportedFeatureException
      */
-    public static function createAsyncClient(ClientInterface $client): AsyncClientInterface
+    public static function create(?ClientInterface $client = null): AsyncClientInterface
     {
+        if ($client === null) {
+            $client = self::createClient();
+        }
+
         if ($client instanceof AsyncClientInterface) {
             return $client;
         }
@@ -68,6 +73,17 @@ class Factory
         // @codeCoverageIgnoreStart
         throw new UnsupportedFeatureException('You cannot use the concurrent request pool feature as the required packages are not installed.'); // @phpstan-ignore-line
         // @codeCoverageIgnoreEnd
+    }
+
+    private static function createClient(): ClientInterface
+    {
+        if (! class_exists(Psr18ClientDiscovery::class)) {
+            // @codeCoverageIgnoreStart
+            throw new \RuntimeException('Unable to create PSR-18 client as the "php-http/discovery" package is not installed. Try running "composer require php-http/discovery".');
+            // @codeCoverageIgnoreEnd
+        }
+
+        return Psr18ClientDiscovery::find();
     }
 
     private static function getUnderlyingSymfonyHttpClient(Psr18Client $client): ?HttpClientInterface

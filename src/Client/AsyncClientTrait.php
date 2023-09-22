@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Client;
+namespace Fansipan\Peak\Client;
 
-use Fansipan\Concurrent\Concurrency\Deferrable;
-use Fansipan\Concurrent\Concurrency\Driver;
-use Fansipan\Concurrent\Concurrency\PslDeferred;
-use Fansipan\Concurrent\Concurrency\ReactDeferred;
+use Fansipan\Peak\Concurrency\Deferrable;
+use Fansipan\Peak\Concurrency\Driver;
+use Fansipan\Peak\Concurrency\PslDeferred;
+use Fansipan\Peak\Concurrency\ReactDeferred;
 
 trait AsyncClientTrait
 {

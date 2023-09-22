@@ -1,11 +1,11 @@
 <?php
 
-namespace Fansipan\Concurrent\Tests;
+namespace Fansipan\Peak\Tests;
 
-use Fansipan\Concurrent\Client\GuzzleClient;
-use Fansipan\Concurrent\Client\ReactClient;
-use Fansipan\Concurrent\Client\SymfonyClient;
-use Fansipan\Concurrent\Concurrency\ReactDeferred;
+use Fansipan\Peak\Client\GuzzleClient;
+use Fansipan\Peak\Client\ReactClient;
+use Fansipan\Peak\Client\SymfonyClient;
+use Fansipan\Peak\Concurrency\ReactDeferred;
 
 final class ReactPoolTest extends TestCase
 {

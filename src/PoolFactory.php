@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent;
+namespace Fansipan\Peak;
 
-use Fansipan\Concurrent\Client\AsyncClientInterface;
-use Fansipan\Concurrent\Client\Factory;
+use Fansipan\Peak\Client\AsyncClientFactory;
+use Fansipan\Peak\Client\AsyncClientInterface;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Psr\Http\Client\ClientInterface;
 
@@ -13,7 +13,7 @@ class PoolFactory
 {
     public static function createForClient(ClientInterface $client): Pool
     {
-        return new ClientPool(Factory::createAsyncClient($client));
+        return new ClientPool(AsyncClientFactory::create($client));
     }
 
     public static function createForConnector(ConnectorInterface $connector): Pool
@@ -27,7 +27,7 @@ class PoolFactory
                 // @codeCoverageIgnoreEnd
             }
 
-            $connector = $connector->withClient(Factory::createAsyncClient($client));
+            $connector = $connector->withClient(AsyncClientFactory::create($client));
         }
 
         return new ConnectorPool($connector);

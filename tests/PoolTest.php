@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Tests;
+namespace Fansipan\Peak\Tests;
 
-use Fansipan\Concurrent\Client\Factory;
-use Fansipan\Concurrent\Client\GuzzleClient;
-use Fansipan\Concurrent\Client\ReactClient;
-use Fansipan\Concurrent\Client\SymfonyClient;
-use Fansipan\Concurrent\Concurrency\Driver;
-use Fansipan\Concurrent\Concurrency\DriverDiscovery;
-use Fansipan\Concurrent\ConnectorPool;
-use Fansipan\Concurrent\Exception\InvalidPoolRequestException;
-use Fansipan\Concurrent\Exception\UnsupportedClientException;
-use Fansipan\Concurrent\Pool;
-use Fansipan\Concurrent\PoolFactory;
-use Fansipan\Concurrent\PoolTrait;
+use Fansipan\Peak\Client\AsyncClientFactory;
+use Fansipan\Peak\Client\GuzzleClient;
+use Fansipan\Peak\Client\ReactClient;
+use Fansipan\Peak\Client\SymfonyClient;
+use Fansipan\Peak\Concurrency\Driver;
+use Fansipan\Peak\Concurrency\DriverDiscovery;
+use Fansipan\Peak\ConnectorPool;
+use Fansipan\Peak\Exception\InvalidPoolRequestException;
+use Fansipan\Peak\Exception\UnsupportedClientException;
+use Fansipan\Peak\Pool;
+use Fansipan\Peak\PoolFactory;
+use Fansipan\Peak\PoolTrait;
 use GuzzleHttp\Client;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\GenericConnector;
@@ -51,10 +51,10 @@ final class PoolTest extends TestCase
 
     public function test_async_client_factory(): void
     {
-        $client = Factory::createAsyncClient(new Client());
+        $client = AsyncClientFactory::create(new Client());
         $this->assertInstanceOf(GuzzleClient::class, $client);
 
-        $client = Factory::createAsyncClient(new Psr18Client());
+        $client = AsyncClientFactory::create(new Psr18Client());
         $this->assertInstanceOf(SymfonyClient::class, $client);
     }
 
@@ -89,7 +89,7 @@ final class PoolTest extends TestCase
 
         DriverDiscovery::prefer(Driver::REACT);
 
-        $pool = PoolFactory::createForClient(Factory::createAsyncClient(new FakeHttpClient()));
+        $pool = PoolFactory::createForClient(AsyncClientFactory::create(new FakeHttpClient()));
         $this->assertInstanceOf(ReactClient::class, $this->getClientFromPool($pool));
     }
 

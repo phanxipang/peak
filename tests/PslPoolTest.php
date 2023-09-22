@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Tests;
+namespace Fansipan\Peak\Tests;
 
-use Fansipan\Concurrent\Client\GuzzleClient;
-use Fansipan\Concurrent\Client\SymfonyClient;
-use Fansipan\Concurrent\Concurrency\PslDeferred;
+use Fansipan\Peak\Client\GuzzleClient;
+use Fansipan\Peak\Client\SymfonyClient;
+use Fansipan\Peak\Concurrency\PslDeferred;
 
 final class PslPoolTest extends TestCase
 {

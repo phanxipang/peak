@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Concurrency;
+namespace Fansipan\Peak\Concurrency;
 
 use React\Async;
 use React\EventLoop\Loop;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Exception;
+namespace Fansipan\Peak\Exception;
 
 class UnsupportedFeatureException extends \Exception
 {

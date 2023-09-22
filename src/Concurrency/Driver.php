@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent\Concurrency;
+namespace Fansipan\Peak\Concurrency;
 
 enum Driver: string
 {
     case PSL = 'azjezz/psl';
-    case REACT = 'react/async react/http';
+    case REACT = 'react/async clue/mq-react';
 }

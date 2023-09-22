@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Concurrent;
+namespace Fansipan\Peak;
 
-use Fansipan\Concurrent\Client\AsyncClientInterface;
-use Fansipan\Concurrent\Exception\InvalidPoolRequestException;
-use Fansipan\Concurrent\Exception\UnsupportedClientException;
+use Fansipan\Peak\Client\AsyncClientInterface;
+use Fansipan\Peak\Exception\InvalidPoolRequestException;
+use Fansipan\Peak\Exception\UnsupportedClientException;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\Request;
 use Jenky\Atlas\Response;
