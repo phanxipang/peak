@@ -12,6 +12,7 @@ A simple and efficient solution for concurrently sending HTTP requests using PSR
 Peak is a library that enables concurrent request sending using a request pool. It leverages the event loop of [ReactPHP](https://github.com/reactphp) or [PSL](https://github.com/azjezz/psl) to handle and manage the requests concurrently.
 
 ## Requirements
+
 - PHP 8.1 or higher.
 - A package that supports non-block I/O using Fibers under the hood (now refer as **driver**).
 

@@ -17,7 +17,7 @@ class PoolFactory
      * @throws \Fansipan\Peak\Exception\UnsupportedClientException
      * @throws \Fansipan\Peak\Exception\UnsupportedFeatureException
      */
-    public static function createForClient(ClientInterface $client): Pool
+    public static function createFromClient(ClientInterface $client): Pool
     {
         return new ClientPool(AsyncClientFactory::create($client));
     }
@@ -28,7 +28,7 @@ class PoolFactory
      * @throws \Fansipan\Peak\Exception\UnsupportedClientException
      * @throws \Fansipan\Peak\Exception\UnsupportedFeatureException
      */
-    public static function createForConnector(ConnectorInterface $connector): Pool
+    public static function createFromConnector(ConnectorInterface $connector): Pool
     {
         $client = $connector->client();
 

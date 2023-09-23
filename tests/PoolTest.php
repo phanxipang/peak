@@ -62,13 +62,13 @@ final class PoolTest extends TestCase
     {
         $client = new ReactClient();
 
-        $clientPool = PoolFactory::createForClient($client);
+        $clientPool = PoolFactory::createFromClient($client);
 
         $this->expectException(InvalidPoolRequestException::class);
 
         $clientPool->send([1, 2, 3]);
 
-        $connectorPool = PoolFactory::createForConnector(
+        $connectorPool = PoolFactory::createFromConnector(
             (new GenericConnector())->withClient($client)
         );
 
@@ -78,18 +78,18 @@ final class PoolTest extends TestCase
 
     public function test_pool_factory(): void
     {
-        $pool = PoolFactory::createForConnector((new GenericConnector())->withClient(new Client()));
+        $pool = PoolFactory::createFromConnector((new GenericConnector())->withClient(new Client()));
         $this->assertInstanceOf(GuzzleClient::class, $this->getClientFromPool($pool));
 
-        $pool = PoolFactory::createForConnector((new GenericConnector())->withClient(new Psr18Client()));
+        $pool = PoolFactory::createFromConnector((new GenericConnector())->withClient(new Psr18Client()));
         $this->assertInstanceOf(SymfonyClient::class, $this->getClientFromPool($pool));
 
         $this->expectException(UnsupportedClientException::class);
-        $pool = PoolFactory::createForClient(new FakeHttpClient());
+        $pool = PoolFactory::createFromClient(new FakeHttpClient());
 
         DriverDiscovery::prefer(Driver::REACT);
 
-        $pool = PoolFactory::createForClient(AsyncClientFactory::create(new FakeHttpClient()));
+        $pool = PoolFactory::createFromClient(AsyncClientFactory::create(new FakeHttpClient()));
         $this->assertInstanceOf(ReactClient::class, $this->getClientFromPool($pool));
     }
 

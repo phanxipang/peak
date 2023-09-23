@@ -56,6 +56,6 @@ final class ConnectorPool implements Pool
             }
         };
 
-        return $this->getRunner($this->client)->run($promises($this->connector, $requests));
+        return $this->createWorker($this->client)->run($promises($this->connector, $requests));
     }
 }

@@ -6,9 +6,9 @@ namespace Fansipan\Peak;
 
 use Fansipan\Peak\Client\AsyncClientInterface;
 use Fansipan\Peak\Concurrency\Driver;
-use Fansipan\Peak\Concurrency\PslConcurrency;
-use Fansipan\Peak\Concurrency\ReactConcurrency;
-use Fansipan\Peak\Concurrency\Runner;
+use Fansipan\Peak\Concurrency\PslWorker;
+use Fansipan\Peak\Concurrency\ReactWorker;
+use Fansipan\Peak\Concurrency\Worker;
 use Fansipan\Peak\Exception\UnsupportedFeatureException;
 
 trait PoolTrait
@@ -35,13 +35,13 @@ trait PoolTrait
         return $clone;
     }
 
-    private function getRunner(AsyncClientInterface $client, ?\Closure $operation = null): Runner
+    private function createWorker(AsyncClientInterface $client): Worker
     {
         $driver = $client->driver();
 
         return match (true) {
-            $driver === Driver::PSL => new PslConcurrency($this->concurrency, $operation),
-            $driver === Driver::REACT => new ReactConcurrency($this->concurrency, $operation),
+            $driver === Driver::PSL => new PslWorker($this->concurrency),
+            $driver === Driver::REACT => new ReactWorker($this->concurrency),
             default => throw new UnsupportedFeatureException('You cannot use the concurrent request pool feature as the required packages are not installed.'),
         };
     }

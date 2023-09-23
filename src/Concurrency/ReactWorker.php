@@ -7,21 +7,21 @@ namespace Fansipan\Peak\Concurrency;
 use Clue\React\Mq\Queue;
 use React\Async;
 
-final class ReactConcurrency implements Runner
+final class ReactWorker implements Worker
 {
     private readonly Queue $queue;
 
     /**
      * @param  int<1, max> $limit
      */
-    public function __construct(int $limit = 10, ?\Closure $operation = null)
+    public function __construct(int $limit = 10)
     {
         if ($limit < 1) {
             throw new \ValueError('Argument #1 ($limit) must be positive, got '.$limit);
         }
 
         $this->queue = new Queue(
-            $limit, null, $operation ?? static fn (\Closure $cb) => Async\async($cb)()
+            $limit, null, static fn (\Closure $cb) => Async\async($cb)()
         );
     }
 

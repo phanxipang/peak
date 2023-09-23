@@ -105,7 +105,7 @@ final class DelayTest extends TestCase
             }
         };
 
-        $pool = PoolFactory::createForClient($client);
+        $pool = PoolFactory::createFromClient($client);
         $pool->send($requests($totalRequests));
     }
 

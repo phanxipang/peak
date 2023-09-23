@@ -6,21 +6,21 @@ namespace Fansipan\Peak\Concurrency;
 
 use Psl\Async;
 
-final class PslConcurrency implements Runner
+final class PslWorker implements Worker
 {
     private readonly Async\Semaphore $semaphore;
 
     /**
      * @param  int<1, max> $limit
      */
-    public function __construct(int $limit = 10, ?\Closure $operation = null)
+    public function __construct(int $limit = 10)
     {
         if ($limit < 1) {
             throw new \ValueError('Argument #1 ($limit) must be positive, got '.$limit);
         }
 
         $this->semaphore = new Async\Semaphore(
-            $limit, $operation ?? static fn ($value) => $value
+            $limit, static fn ($value) => $value
         );
     }
 

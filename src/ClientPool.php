@@ -34,7 +34,7 @@ final class ClientPool implements Pool
             }
         };
 
-        return $this->getRunner($this->client)->run(
+        return $this->createWorker($this->client)->run(
             $promises($this->client, $requests)
         );
     }
