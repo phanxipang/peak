@@ -67,7 +67,7 @@ use Psr\Http\Message\ResponseInterface;
 // Using array
 $responses = $pool->send([
     $psr7Request,
-    fn (ClientInterface $client): ResponseInterface => $client->sendRequest($psr7Request)
+    fn (ClientInterface $client): ResponseInterface => $client->sendRequest($psr7Request),
 ]);
 
 var_dump($responses[0]);
@@ -93,8 +93,17 @@ use Psr\Http\Message\ResponseInterface;
 
 $responses = $pool->send([
     'first' => $psr7Request,
-    'second' => fn (ClientInterface $client): ResponseInterface => $client->sendRequest($psr7Request)
+    'second' => fn (ClientInterface $client): ResponseInterface => $client->sendRequest($psr7Request),
 ]);
+
+// Or using generator
+
+$requests = function (): \Generator {
+    yield 'first' => $psr7Request;
+    yield 'second' => fn (ClientInterface $client): ResponseInterface => $client->sendRequest($psr7Request);
+};
+
+$responses = $pool->send($requests());
 
 var_dump($responses['first']);
 var_dump($responses['second']);
