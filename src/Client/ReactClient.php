@@ -25,11 +25,13 @@ final class ReactClient implements AsyncClientInterface
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $delay = $this->getDelay(true);
+        $delay = $this->getDelayAsSeconds();
 
         if ($delay > 0) {
             Async\delay($delay);
         }
+
+        $this->delay = 0;
 
         return Async\await(
             $this->browser->request(
