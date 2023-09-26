@@ -20,7 +20,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyResponseInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
-final class SymfonyClient implements AsyncClientInterface, ResetInterface
+final class SymfonyClient implements AsyncClientInterface, ResetInterface, Delayable
 {
     use AsyncClientTrait;
     use DelayTrait;

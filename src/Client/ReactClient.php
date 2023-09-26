@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use React\Async;
 use React\Http\Browser;
 
-final class ReactClient implements AsyncClientInterface
+final class ReactClient implements AsyncClientInterface, Delayable
 {
     use DelayTrait;
 

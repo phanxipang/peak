@@ -11,7 +11,7 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-final class GuzzleClient implements AsyncClientInterface
+final class GuzzleClient implements AsyncClientInterface, Delayable
 {
     use AsyncClientTrait;
     use DelayTrait;
