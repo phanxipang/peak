@@ -26,16 +26,16 @@ composer require fansipan/peak
 
 Additionally, depending on your choice of driver, these packages may also need to be installed.
 
-### ReactPHP
-
-```bash
-composer require clue/mq-react react/async
-```
-
 ### PSL
 
 ```bash
 composer require azjezz/psl
+```
+
+### ReactPHP
+
+```bash
+composer require clue/mq-react react/async
 ```
 
 ## Usage
@@ -54,6 +54,46 @@ $pool = PoolFactory::createForClient($client);
 It will attempt to create async version of the client using `AsyncClientFactory`. The supported clients are [Guzzle](https://github.com/guzzle/guzzle) and [Symfony HTTPClient](https://github.com/symfony/http-client) ([`Psr18Client`](https://symfony.com/doc/current/http_client.html#psr-18-and-psr-17)) except for [ReactPHP driver](#reactphp).
 
 > You can use any PSR-18 client implementations with ReactPHP driver. If an unsupported client is used, it will be replaced with the [`Browser`](https://github.com/reactphp/http#browser) HTTP client.
+
+The `Fansipan\Peak\PoolFactory` provides a configured request pool based on the installed packages, which is suitable for most cases. However, if desired, you can specify a particular implementation if it is available on your platform and/or in your application.
+
+First, you need to create your desired driver:
+
+```php
+use Fansipan\Peak\Concurrency\PslDeferred;
+use Fansipan\Peak\Concurrency\ReactDeferred;
+
+// PSL
+$defer = new PslDeferred();
+
+// ReactPHP
+$defer = new ReactDeferred();
+```
+
+Then create an asynchronous client, which is essentially a decorator for the PSR-18 client:
+
+```php
+use Fansipan\Peak\Client\GuzzleClient;
+use Fansipan\Peak\Client\SymfonyClient;
+use Fansipan\Peak\ClientPool;
+
+// Guzzle
+
+$asyncClient = new GuzzleClient($defer);
+// or using existing Guzzle client
+/** @var \GuzzleHttp\ClientInterface $client */
+$asyncClient = new GuzzleClient($defer, $client);
+
+// Symfony HTTP Client
+
+$asyncClient = new SymfonyClient($defer);
+// or using existing Symfony client
+/** @var \Symfony\Contracts\HttpClient\HttpClientInterface $client */
+$asyncClient = new SymfonyClient($defer, $client);
+
+
+$pool = new ClientPool($asyncClient);
+```
 
 ### Sending Requests
 
