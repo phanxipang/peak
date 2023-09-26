@@ -51,9 +51,9 @@ use Fansipan\Peak\PoolFactory;
 $pool = PoolFactory::createForClient($client);
 ```
 
-It will attempt to create async version of the client using `AsyncClientFactory`. The supported clients are [Guzzle](https://github.com/guzzle/guzzle) and [Symfony HTTPClient](https://github.com/symfony/http-client) ([`Psr18Client`](https://symfony.com/doc/current/http_client.html#psr-18-and-psr-17)) except for [ReactPHP driver](#reactphp).
+It will attempt to create async version of the client using `AsyncClientFactory`. The supported clients are [Guzzle](https://github.com/guzzle/guzzle) and [Symfony HTTPClient](https://github.com/symfony/http-client) ([`Psr18Client`](https://symfony.com/doc/current/http_client.html#psr-18-and-psr-17)).
 
-> You can use any PSR-18 client implementations with ReactPHP driver. If an unsupported client is used, it will be replaced with the [`Browser`](https://github.com/reactphp/http#browser) HTTP client.
+> You can use any PSR-18 client implementations with ReactPHP driver. If an unsupported client is used, it will be replaced with the [`Browser`](https://github.com/reactphp/http#browser) HTTP client (require `react/http` installed).
 
 The `Fansipan\Peak\PoolFactory` provides a configured request pool based on the installed packages, which is suitable for most cases. However, if desired, you can specify a particular implementation if it is available on your platform and/or in your application.
 
