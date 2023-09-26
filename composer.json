@@ -37,8 +37,7 @@
         "phpunit/phpunit": "^9.0",
         "react/async": "^4.1",
         "react/http": "^1.9",
-        "symfony/http-client": "^6.3",
-        "symfony/var-dumper": "^6.3"
+        "symfony/http-client": "^6.3"
     },
     "autoload": {
         "psr-4": {
@@ -68,6 +67,11 @@
             "@analyse",
             "@test"
         ]
+    },
+    "suggest": {
+        "azjezz/psl": "Required for the PSL driver",
+        "clue/mq-react": "Required for the ReactPHP driver",
+        "react/async": "Required for the ReactPHP driver"
     },
     "extra": {
         "branch-alias": {
