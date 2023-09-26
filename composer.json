@@ -27,6 +27,7 @@
         "psr/http-factory": "^1.0"
     },
     "require-dev": {
+        "amphp/pipeline": "^1.0",
         "azjezz/psl": "^2.7",
         "clue/mq-react": "^1.6",
         "fansipan/mock-client": "^1.0",

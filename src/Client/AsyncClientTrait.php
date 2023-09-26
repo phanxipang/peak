@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Client;
 
+use Fansipan\Peak\Concurrency\AmpDeferred;
 use Fansipan\Peak\Concurrency\Deferrable;
 use Fansipan\Peak\Concurrency\Driver;
 use Fansipan\Peak\Concurrency\PslDeferred;
@@ -18,6 +19,7 @@ trait AsyncClientTrait
         $deferrable = $this->getDeferrable();
 
         return match (true) {
+            $deferrable instanceof AmpDeferred => Driver::AMP,
             $deferrable instanceof PslDeferred => Driver::PSL,
             $deferrable instanceof ReactDeferred => Driver::REACT,
             default => null,

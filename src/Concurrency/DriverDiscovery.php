@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Concurrency;
 
+use Amp\Future;
+use Amp\Pipeline\Pipeline;
 use Clue\React\Mq\Queue;
 use Psl\Async\Awaitable;
 
@@ -28,7 +30,9 @@ final class DriverDiscovery
             return self::$cached;
         }
 
-        if (self::isPslInstalled()) {
+        if (self::isAmpInstalled()) {
+            $driver = Driver::AMP;
+        } elseif (self::isPslInstalled()) {
             $driver = Driver::PSL;
         } elseif (self::isReactInstalled()) {
             $driver = Driver::REACT;
@@ -49,6 +53,7 @@ final class DriverDiscovery
     public static function prefer(Driver $driver): void
     {
         $check = match ($driver) {
+            Driver::AMP => self::isAmpInstalled(),
             Driver::PSL => self::isPslInstalled(),
             Driver::REACT => self::isReactInstalled(),
         };
@@ -64,6 +69,11 @@ final class DriverDiscovery
         }
 
         self::$preferred = $driver;
+    }
+
+    public static function isAmpInstalled(): bool
+    {
+        return \class_exists(Future::class) && \class_exists(Pipeline::class);
     }
 
     public static function isReactInstalled(): bool

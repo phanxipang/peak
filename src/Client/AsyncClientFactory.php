@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Client;
 
+use Fansipan\Peak\Concurrency\AmpDeferred;
 use Fansipan\Peak\Concurrency\Driver;
 use Fansipan\Peak\Concurrency\DriverDiscovery;
 use Fansipan\Peak\Concurrency\PslDeferred;
@@ -35,6 +36,21 @@ class AsyncClientFactory
         }
 
         $driver = DriverDiscovery::find();
+
+        if ($driver === Driver::AMP) {
+            if ($client instanceof GuzzleClientInterface) {
+                return new GuzzleClient(new AmpDeferred(), $client);
+            }
+
+            if ($client instanceof Psr18Client) {
+                return new SymfonyClient(new AmpDeferred(), self::getUnderlyingSymfonyHttpClient($client));
+            }
+
+            throw new UnsupportedClientException(\sprintf(
+                'The client %s is not supported. The PSL Pool only supports "guzzlehttp/guzzle" and "symfony/http-client".',
+                \get_debug_type($client)
+            ));
+        }
 
         if ($driver === Driver::PSL) {
             if ($client instanceof GuzzleClientInterface) {
