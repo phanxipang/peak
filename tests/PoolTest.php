@@ -42,6 +42,10 @@ final class PoolTest extends TestCase
 
     public function test_driver_discovery(): void
     {
+        $this->assertSame(Driver::AMP, DriverDiscovery::find(false));
+
+        DriverDiscovery::prefer(Driver::PSL);
+
         $this->assertSame(Driver::PSL, DriverDiscovery::find(false));
 
         DriverDiscovery::prefer(Driver::REACT);
