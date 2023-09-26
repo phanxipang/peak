@@ -36,12 +36,9 @@ final class GuzzleClient implements AsyncClientInterface, Delayable
 
         $this->delay = 0;
 
-        return $this->deferred->defer(static function (\Closure $resolve, \Closure $reject) use ($promise) {
-            $promise->then(
-                static fn (ResponseInterface $response) => $resolve($response),
-                static fn (\Throwable $e) => $reject($e)
-            )->wait();
-        }, $delay);
+        return $this->deferred->defer(
+            static fn () => $promise->wait(), $delay
+        );
     }
 
     private function getDeferrable(): Deferrable

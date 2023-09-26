@@ -80,13 +80,9 @@ final class SymfonyClient implements AsyncClientInterface, ResetInterface, Delay
 
         $this->delay = 0;
 
-        return $this->deferred->defer(function (\Closure $resolve, \Closure $reject) use ($response) {
-            try {
-                $resolve($this->convertToPsrResponse($response));
-            } catch (\Throwable $e) {
-                $reject($e);
-            }
-        }, $delay);
+        return $this->deferred->defer(
+            fn () => $this->convertToPsrResponse($response), $delay
+        );
     }
 
     private function convertToPsrResponse(SymfonyResponseInterface $response): ResponseInterface
