@@ -9,10 +9,11 @@ interface Worker
     /**
      * Run the functions in the tasks iterable concurrently, without waiting until the previous function has completed.
      *
-     * @template T
+     * @template Tk of array-key
+     * @template Tv
      *
-     * @param  iterable<array-key, (\Closure(): T)> $tasks
-     * @return array<array-key, T>
+     * @param  iterable<Tk, \Closure(): Tv> $tasks
+     * @return array<Tk, Tv>
      */
     public function run(iterable $tasks): array;
 }
