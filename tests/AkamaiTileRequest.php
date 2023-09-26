@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Tests;
+namespace Fansipan\Peak\Tests;
 
 use Jenky\Atlas\Request;
 

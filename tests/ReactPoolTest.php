@@ -1,33 +1,36 @@
 <?php
 
-namespace Jenky\Atlas\Pool\Tests;
+namespace Fansipan\Peak\Tests;
 
-use Jenky\Atlas\Contracts\ConnectorInterface;
-use Jenky\Atlas\Pool\React\Client;
-use Jenky\Atlas\Pool\React\GuzzleClient;
-use Jenky\Atlas\Pool\React\Pool;
-use Jenky\Atlas\Pool\React\SymfonyClient;
-use Jenky\Concurrency\PoolInterface;
+use Fansipan\Peak\Client\GuzzleClient;
+use Fansipan\Peak\Client\ReactClient;
+use Fansipan\Peak\Client\SymfonyClient;
+use Fansipan\Peak\Concurrency\ReactDeferred;
 
 final class ReactPoolTest extends TestCase
 {
-    protected function createPool(ConnectorInterface $connector): PoolInterface
+    private function createSymfonyClient(): SymfonyClient
     {
-        return new Pool($connector);
+        return new SymfonyClient(new ReactDeferred());
+    }
+
+    private function createGuzzleClient(): GuzzleClient
+    {
+        return new GuzzleClient(new ReactDeferred());
     }
 
     public function test_react_pool_using_react_browser(): void
     {
-        $this->performTests($this->createConnector(new Client()));
+        $this->performConnectorTests($this->createConnector(new ReactClient()));
     }
 
     public function test_react_pool_using_symfony_http_client(): void
     {
-        $this->performTests($this->createConnector(new SymfonyClient()));
+        $this->performConnectorTests($this->createConnector($this->createSymfonyClient()));
     }
 
     public function test_react_pool_using_guzzle(): void
     {
-        $this->performTests($this->createConnector(new GuzzleClient()));
+        $this->performConnectorTests($this->createConnector($this->createGuzzleClient()));
     }
 }

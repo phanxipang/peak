@@ -2,20 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Jenky\Atlas\Pool\Psl;
+namespace Fansipan\Peak\Client;
 
+use Fansipan\Peak\Concurrency\Deferrable;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
-use Psl\Async;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-final class GuzzleClient implements AsyncClientInterface
+final class GuzzleClient implements AsyncClientInterface, Delayable
 {
+    use AsyncClientTrait;
+    use DelayTrait;
+
     private ClientInterface $client;
 
     public function __construct(
+        private readonly Deferrable $deferred,
         ?ClientInterface $client = null,
     ) {
         $this->client = $client ?? new Client();
@@ -28,15 +32,20 @@ final class GuzzleClient implements AsyncClientInterface
             RequestOptions::HTTP_ERRORS => false,
         ]);
 
-        $defer = new Async\Deferred();
+        $delay = $this->getDelayAsSeconds();
 
-        Async\Scheduler::defer(static function () use ($defer, $promise) {
+        $this->delay = 0;
+
+        return $this->deferred->defer(static function (\Closure $resolve, \Closure $reject) use ($promise) {
             $promise->then(
-                fn (ResponseInterface $response) => $defer->complete($response),
-                fn (\Throwable $e) => $defer->error($e)
+                static fn (ResponseInterface $response) => $resolve($response),
+                static fn (\Throwable $e) => $reject($e)
             )->wait();
-        });
+        }, $delay);
+    }
 
-        return $defer->getAwaitable()->await();
+    private function getDeferrable(): Deferrable
+    {
+        return $this->deferred;
     }
 }
