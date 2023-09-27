@@ -14,6 +14,8 @@ class PoolFactory
     /**
      * Create a new pool for the given client.
      *
+     * @return ClientPool
+     *
      * @throws \Fansipan\Peak\Exception\UnsupportedClientException
      * @throws \Fansipan\Peak\Exception\UnsupportedFeatureException
      */
@@ -24,6 +26,8 @@ class PoolFactory
 
     /**
      * Create a new pool for the given connector.
+     *
+     * @return ConnectorPool
      *
      * @throws \Fansipan\Peak\Exception\UnsupportedClientException
      * @throws \Fansipan\Peak\Exception\UnsupportedFeatureException
