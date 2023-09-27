@@ -29,4 +29,11 @@ final class AmpPoolTest extends TestCase
     {
         $this->performConnectorTests($this->createConnector($this->createGuzzleClient()));
     }
+
+    public function test_amp_pool_keyed_response(): void
+    {
+        $this->performKeyedResponseTests(
+            $this->mockSymfonyClient(new AmpDeferred())
+        );
+    }
 }

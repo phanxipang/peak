@@ -20,13 +20,20 @@ final class PslPoolTest extends TestCase
         return new GuzzleClient(new PslDeferred());
     }
 
-    public function test_react_pool_using_symfony_http_client(): void
+    public function test_psl_pool_using_symfony_http_client(): void
     {
         $this->performConnectorTests($this->createConnector($this->createSymfonyClient()));
     }
 
-    public function test_react_pool_using_guzzle(): void
+    public function test_psl_pool_using_guzzle(): void
     {
         $this->performConnectorTests($this->createConnector($this->createGuzzleClient()));
+    }
+
+    public function test_psl_pool_keyed_response(): void
+    {
+        $this->performKeyedResponseTests(
+            $this->mockSymfonyClient(new PslDeferred())
+        );
     }
 }

@@ -22,11 +22,26 @@ final class AmpWorker implements Worker
 
     public function run(iterable $tasks): array
     {
-        $promises = Pipeline::fromIterable($tasks)
+        $promises = Pipeline::fromIterable(static function () use ($tasks): \Generator {
+            foreach ($tasks as $key => $task) {
+                yield new AmpTask($key, $task);
+            }
+        })
             ->concurrent($this->limit)
             ->unordered()
-            ->map(static fn (\Closure $task) => Amp\async($task));
+            ->map(static fn (AmpTask $task) => Amp\async(\Closure::fromCallable($task)));
 
-        return Future\awaitAll($promises)[1] ?? [];
+        $results = [];
+
+        foreach (Future::iterate($promises) as $promise) {
+            try {
+                /** @var AmpTask $t */
+                $t = $promise->await();
+                $results[$t->key()] = $t->value();
+            } catch (\Throwable) {
+            }
+        }
+
+        return $results;
     }
 }

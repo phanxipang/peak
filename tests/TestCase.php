@@ -7,6 +7,8 @@ namespace Fansipan\Peak\Tests;
 use Fansipan\Peak\Client\AsyncClientInterface;
 use Fansipan\Peak\ClientPool;
 use Fansipan\Peak\ConnectorPool;
+use Fansipan\Peak\PoolFactory;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Jenky\Atlas\Contracts\ConnectorInterface;
 use Jenky\Atlas\GenericConnector;
 use Jenky\Atlas\Middleware\Interceptor;
@@ -17,7 +19,7 @@ use Psr\Http\Message\ResponseInterface;
 
 abstract class TestCase extends BaseTestCase
 {
-    use TestRequestTrait;
+    use TestTrait;
 
     protected function createConnector(?ClientInterface $client = null): ConnectorInterface
     {
@@ -53,5 +55,22 @@ abstract class TestCase extends BaseTestCase
         $this->assertCount($total, $responses);
         $this->assertInstanceOf(Response::class, $responses[0]);
         $this->assertSame('bar', $responses[0]->header('X-Foo'));
+    }
+
+    protected function performKeyedResponseTests(AsyncClientInterface $client): void
+    {
+        $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
+
+        $responses = PoolFactory::createFromClient($client)
+            ->send([
+                'foo' => $requestFactory->createRequest('GET', 'http://localhost/foo'),
+                'bar' => $requestFactory->createRequest('GET', 'http://localhost/bar'),
+            ]);
+
+        $this->assertArrayHasKey('foo', $responses);
+        $this->assertArrayHasKey('bar', $responses);
+
+        $this->assertSame(200, $responses['foo']->getStatusCode());
+        $this->assertSame(200, $responses['bar']->getStatusCode());
     }
 }
