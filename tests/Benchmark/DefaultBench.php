@@ -8,18 +8,21 @@ use Fansipan\Peak\Tests\TestRequestTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\RequestOptions;
+use PhpBench\Attributes\ParamProviders;
 
 final class DefaultBench
 {
+    use BenchTrait;
     use TestRequestTrait;
 
-    public function benchGuzzlePool(): void
+    #[ParamProviders(['provideLimits'])]
+    public function benchGuzzlePool(array $params): void
     {
         $options = [
             RequestOptions::ALLOW_REDIRECTS => false,
             RequestOptions::HTTP_ERRORS => false,
         ];
 
-        Pool::batch(new Client($options), $this->createPsrRequests(100));
+        Pool::batch(new Client($options), $this->createPsrRequests($params['limit']));
     }
 }

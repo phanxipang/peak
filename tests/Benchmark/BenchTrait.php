@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Fansipan\Peak\Tests\Bench;
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Pool;
+namespace Fansipan\Peak\Tests\Benchmark;
 
 trait BenchTrait
 {
-    public function benchGuzzlePool(): void
+    public function provideLimits(): \Generator
     {
-        // Pool::batch(new Client(), $this->cre)
+        yield '50 rqs' => ['limit' => 50];
+        yield '100 rqs' => ['limit' => 100];
+        yield '200 rqs' => ['limit' => 200];
     }
 }
