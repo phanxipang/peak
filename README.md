@@ -9,7 +9,7 @@
 
 A simple and efficient solution for concurrently sending HTTP requests using PSR-18 client implementations.
 
-Peak is a library that enables concurrent request sending using a request pool. It leverages the event loop of [ReactPHP](https://github.com/reactphp) or [PSL](https://github.com/azjezz/psl) to handle and manage the requests concurrently.
+Peak is a library that enables concurrent request sending using a request pool. It leverages the event loop of [AMPHP](https://github.com/amphp), [ReactPHP](https://github.com/reactphp) or [PSL](https://github.com/azjezz/psl) to handle and manage the requests concurrently.
 
 ## Requirements
 
@@ -25,6 +25,12 @@ composer require fansipan/peak
 ```
 
 Additionally, depending on your choice of driver, these packages may also need to be installed.
+
+### AMPHP
+
+```bash
+composer require amphp/pipeline
+```
 
 ### PSL
 
@@ -60,8 +66,12 @@ The `Fansipan\Peak\PoolFactory` provides a configured request pool based on the 
 First, you need to create your desired driver:
 
 ```php
+use Fansipan\Peak\Concurrency\AmpDeferred;
 use Fansipan\Peak\Concurrency\PslDeferred;
 use Fansipan\Peak\Concurrency\ReactDeferred;
+
+// AMPHP
+$defer = new AmpDeferred();
 
 // PSL
 $defer = new PslDeferred();
