@@ -62,22 +62,25 @@ final class PoolTest extends TestCase
         $this->assertInstanceOf(SymfonyClient::class, $client);
     }
 
-    public function test_invalid_pool_request(): void
+    public function test_invalid_client_pool_request(): void
     {
         $client = new ReactClient();
 
-        $clientPool = PoolFactory::createFromClient($client);
+        $pool = PoolFactory::createFromClient($client);
 
         $this->expectException(InvalidPoolRequestException::class);
 
-        $clientPool->send([1, 2, 3]);
+        $pool->send([1, 2, 3]);
+    }
 
-        $connectorPool = PoolFactory::createFromConnector(
-            (new GenericConnector())->withClient($client)
+    public function test_invalid_connector_pool_request(): void
+    {
+        $pool = PoolFactory::createFromConnector(
+            (new GenericConnector())->withClient(AsyncClientFactory::create())
         );
 
         $this->expectException(InvalidPoolRequestException::class);
-        $connectorPool->send([1, fn () => new \stdClass()]);
+        $pool->send([1, fn () => new \stdClass()]);
     }
 
     public function test_pool_factory(): void
