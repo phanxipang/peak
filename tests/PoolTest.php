@@ -88,6 +88,8 @@ final class PoolTest extends TestCase
         $pool = PoolFactory::createFromConnector((new GenericConnector())->withClient(new Client()));
         $this->assertInstanceOf(GuzzleClient::class, $this->getClientFromPool($pool));
 
+        DriverDiscovery::prefer(Driver::PSL);
+
         $pool = PoolFactory::createFromConnector((new GenericConnector())->withClient(new Psr18Client()));
         $this->assertInstanceOf(SymfonyClient::class, $this->getClientFromPool($pool));
 
