@@ -30,6 +30,7 @@ final class DriverDiscovery
             return self::$cached;
         }
 
+        // @codeCoverageIgnoreStart
         if (self::isAmpInstalled()) {
             $driver = Driver::AMP;
         } elseif (self::isPslInstalled()) {
@@ -39,6 +40,7 @@ final class DriverDiscovery
         } else {
             throw new \RuntimeException('Unable to find async driver.');
         }
+        // @codeCoverageIgnoreEnd
 
         if ($cacheResult) {
             self::$cached = $driver;
