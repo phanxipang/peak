@@ -17,7 +17,9 @@ final class ReactWorker implements Worker
     public function __construct(int $limit = 10)
     {
         if ($limit < 1) {
+            // @codeCoverageIgnoreStart
             throw new \ValueError('Argument #1 ($limit) must be positive, got '.$limit);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->queue = new Queue(
@@ -30,7 +32,9 @@ final class ReactWorker implements Worker
         $promises = static function (iterable $tasks, Queue $queue) {
             foreach ($tasks as $key => $task) {
                 if (! \is_callable($task)) {
+                    // @codeCoverageIgnoreStart
                     continue;
+                    // @codeCoverageIgnoreEnd
                 }
 
                 yield $key => static fn () => $queue($task);

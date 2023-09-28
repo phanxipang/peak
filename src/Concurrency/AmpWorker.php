@@ -16,7 +16,9 @@ final class AmpWorker implements Worker
     public function __construct(private readonly int $limit = 10)
     {
         if ($limit < 1) {
+            // @codeCoverageIgnoreStart
             throw new \ValueError('Argument #1 ($limit) must be positive, got '.$limit);
+            // @codeCoverageIgnoreEnd
         }
     }
 
