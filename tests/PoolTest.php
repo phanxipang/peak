@@ -42,6 +42,8 @@ final class PoolTest extends TestCase
 
     public function test_async_client_factory(): void
     {
+        DriverDiscovery::prefer(Driver::AMP);
+
         $client = AsyncClientFactory::create(new Client());
         $this->assertInstanceOf(GuzzleClient::class, $client);
         $this->assertSame(Driver::AMP, $client->driver());
