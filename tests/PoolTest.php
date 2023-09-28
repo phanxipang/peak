@@ -40,26 +40,35 @@ final class PoolTest extends TestCase
         $pool->concurrent(-1);
     }
 
-    public function test_driver_discovery(): void
-    {
-        $this->assertSame(Driver::AMP, DriverDiscovery::find(false));
-
-        DriverDiscovery::prefer(Driver::PSL);
-
-        $this->assertSame(Driver::PSL, DriverDiscovery::find(false));
-
-        DriverDiscovery::prefer(Driver::REACT);
-
-        $this->assertSame(Driver::REACT, DriverDiscovery::find(false));
-    }
-
     public function test_async_client_factory(): void
     {
         $client = AsyncClientFactory::create(new Client());
         $this->assertInstanceOf(GuzzleClient::class, $client);
+        $this->assertSame(Driver::AMP, $client->driver());
 
         $client = AsyncClientFactory::create(new Psr18Client());
         $this->assertInstanceOf(SymfonyClient::class, $client);
+        $this->assertSame(Driver::AMP, $client->driver());
+
+        DriverDiscovery::prefer(Driver::PSL);
+
+        $client = AsyncClientFactory::create(new Client());
+        $this->assertInstanceOf(GuzzleClient::class, $client);
+        $this->assertSame(Driver::PSL, $client->driver());
+
+        $client = AsyncClientFactory::create(new Psr18Client());
+        $this->assertInstanceOf(SymfonyClient::class, $client);
+        $this->assertSame(Driver::PSL, $client->driver());
+
+        DriverDiscovery::prefer(Driver::REACT);
+
+        $client = AsyncClientFactory::create(new Client());
+        $this->assertInstanceOf(GuzzleClient::class, $client);
+        $this->assertSame(Driver::REACT, $client->driver());
+
+        $client = AsyncClientFactory::create(new Psr18Client());
+        $this->assertInstanceOf(SymfonyClient::class, $client);
+        $this->assertSame(Driver::REACT, $client->driver());
     }
 
     public function test_invalid_client_pool_request(): void
