@@ -70,6 +70,7 @@
         ]
     },
     "suggest": {
+        "php-http/discovery": "Provides a convenient solution for auto-discovery and auto-installation of well-known implementations of PSR-17 (HTTP Factories), PSR-18 (HTTP Clients)",
         "azjezz/psl": "Required for the PSL driver",
         "clue/mq-react": "Required for the ReactPHP driver",
         "react/async": "Required for the ReactPHP driver"
