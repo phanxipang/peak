@@ -40,6 +40,22 @@ final class PoolTest extends TestCase
         $pool->concurrent(-1);
     }
 
+    public function test_driver_discovery(): void
+    {
+        $reflector = new \ReflectionClass(DriverDiscovery::class);
+        $reflector->setStaticPropertyValue('preferred', null);
+
+        $this->assertSame(Driver::AMP, DriverDiscovery::find(false));
+
+        DriverDiscovery::prefer(Driver::PSL);
+
+        $this->assertSame(Driver::PSL, DriverDiscovery::find(false));
+
+        DriverDiscovery::prefer(Driver::REACT);
+
+        $this->assertSame(Driver::REACT, DriverDiscovery::find(false));
+    }
+
     public function test_async_client_factory(): void
     {
         DriverDiscovery::prefer(Driver::AMP);
