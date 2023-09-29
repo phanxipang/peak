@@ -36,4 +36,4 @@ jobs:
           composer install --prefer-dist --no-interaction --no-suggest
 
       - name: Create benchmarks
-        run: composer bench
+        run: vendor/bin/phpbench run --report=aggregate
