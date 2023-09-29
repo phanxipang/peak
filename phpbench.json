@@ -2,5 +2,36 @@
     "$schema":"./vendor/phpbench/phpbench/phpbench.schema.json",
     "runner.bootstrap": "vendor/autoload.php",
     "runner.path": "tests/Benchmark",
-    "runner.file_pattern": "*Bench.php"
+    "runner.file_pattern": "*Bench.php",
+    "report.generators": {
+        "chart": {
+            "generator": "component",
+            "components": [
+                {
+                    "title": "Request average time comparison",
+                    "component": "bar_chart_aggregate",
+                    "x_partition": "variant_params['limit'] ~ ' requests'",
+                    "bar_partition": "subject_name",
+                    "y_expr": "mode(partition['result_time_avg']) as time",
+                    "y_axes_label": "yValue as time"
+                },
+                {
+                    "title": "Peak memory usage comparison",
+                    "component": "bar_chart_aggregate",
+                    "x_partition": "variant_params['limit'] ~ ' requests'",
+                    "bar_partition": "subject_name",
+                    "y_expr": "mode(partition['result_mem_peak']) as memory",
+                    "y_axes_label": "yValue as memory"
+                }
+            ]
+        },
+        "all": {
+            "generator": "composite",
+            "reports": [
+                "default",
+                "aggregate",
+                "chart"
+            ]
+        }
+    }
 }

@@ -6,29 +6,29 @@ namespace Fansipan\Peak\Tests\Benchmark;
 
 use Fansipan\Peak\Client\GuzzleClient;
 use Fansipan\Peak\Client\SymfonyClient;
-use Fansipan\Peak\Concurrency\PslDeferred;
+use Fansipan\Peak\Concurrency\AmpDeferred;
 use Fansipan\Peak\PoolFactory;
 use Fansipan\Peak\Tests\TestTrait;
 use PhpBench\Attributes\ParamProviders;
 
-final class PslBench
+final class AmpBench
 {
     use BenchTrait;
     use TestTrait;
 
     #[ParamProviders(['provideLimits'])]
-    public function benchPslWithGuzzle(array $params): void
+    public function benchAmpWithGuzzle(array $params): void
     {
         PoolFactory::createFromClient(
-            new GuzzleClient(new PslDeferred())
+            new GuzzleClient(new AmpDeferred())
         )->send($this->createPsrRequests($params['limit']));
     }
 
     #[ParamProviders(['provideLimits'])]
-    public function benchPslWithSymfony(array $params): void
+    public function benchAmpWithSymfony(array $params): void
     {
         PoolFactory::createFromClient(
-            new SymfonyClient(new PslDeferred())
+            new SymfonyClient(new AmpDeferred())
         )->send($this->createPsrRequests($params['limit']));
     }
 }

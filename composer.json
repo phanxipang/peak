@@ -56,7 +56,7 @@
             "vendor/bin/phpstan analyse"
         ],
         "bench": [
-            "./vendor/bin/phpbench run --report=aggregate"
+            "./vendor/bin/phpbench run --report=all --progress=blinken"
         ],
         "cs": [
             "vendor/bin/php-cs-fixer fix"
