@@ -28,6 +28,9 @@ final class AmpTask
         return $this->key;
     }
 
+    /**
+     * @return T
+     */
     public function value(): mixed
     {
         return $this->value;
