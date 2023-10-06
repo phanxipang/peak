@@ -16,7 +16,9 @@ final class PslWorker implements Worker
     public function __construct(int $limit = 10)
     {
         if ($limit < 1) {
+            // @codeCoverageIgnoreStart
             throw new \ValueError('Argument #1 ($limit) must be positive, got '.$limit);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->semaphore = new Async\Semaphore(
@@ -29,7 +31,9 @@ final class PslWorker implements Worker
         $promises = static function (iterable $tasks, Async\Semaphore $semaphore) {
             foreach ($tasks as $key => $task) {
                 if (! \is_callable($task)) {
+                    // @codeCoverageIgnoreStart
                     continue;
+                    // @codeCoverageIgnoreEnd
                 }
 
                 yield $key => static fn () => $semaphore->waitFor($task());

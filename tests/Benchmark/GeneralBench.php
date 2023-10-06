@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Tests\Benchmark;
 
-use Fansipan\Peak\Tests\TestRequestTrait;
+use Fansipan\Peak\Tests\TestTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\RequestOptions;
 use PhpBench\Attributes\ParamProviders;
 
-final class DefaultBench
+final class GeneralBench
 {
     use BenchTrait;
-    use TestRequestTrait;
+    use TestTrait;
 
     #[ParamProviders(['provideLimits'])]
     public function benchGuzzlePool(array $params): void

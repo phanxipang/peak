@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fansipan\Peak;
 
 use Fansipan\Peak\Client\AsyncClientInterface;
+use Fansipan\Peak\Concurrency\AmpWorker;
 use Fansipan\Peak\Concurrency\Driver;
 use Fansipan\Peak\Concurrency\PslWorker;
 use Fansipan\Peak\Concurrency\ReactWorker;
@@ -40,6 +41,7 @@ trait PoolTrait
         $driver = $client->driver();
 
         return match (true) {
+            $driver === Driver::AMP => new AmpWorker($this->concurrency),
             $driver === Driver::PSL => new PslWorker($this->concurrency),
             $driver === Driver::REACT => new ReactWorker($this->concurrency),
             default => throw new UnsupportedFeatureException('You cannot use the concurrent request pool feature as the required packages are not installed.'),

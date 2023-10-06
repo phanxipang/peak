@@ -9,16 +9,16 @@ use Fansipan\Peak\Client\ReactClient;
 use Fansipan\Peak\Client\SymfonyClient;
 use Fansipan\Peak\Concurrency\ReactDeferred;
 use Fansipan\Peak\PoolFactory;
-use Fansipan\Peak\Tests\TestRequestTrait;
+use Fansipan\Peak\Tests\TestTrait;
 use PhpBench\Attributes\ParamProviders;
 
 final class ReactBench
 {
     use BenchTrait;
-    use TestRequestTrait;
+    use TestTrait;
 
     #[ParamProviders(['provideLimits'])]
-    public function benchReactPoolUsingGuzzle(array $params): void
+    public function benchReactWithGuzzle(array $params): void
     {
         PoolFactory::createFromClient(
             new GuzzleClient(new ReactDeferred())
@@ -26,7 +26,7 @@ final class ReactBench
     }
 
     #[ParamProviders(['provideLimits'])]
-    public function benchReactPoolUsingSymfony(array $params): void
+    public function benchReactWithSymfony(array $params): void
     {
         PoolFactory::createFromClient(
             new SymfonyClient(new ReactDeferred())
@@ -34,7 +34,7 @@ final class ReactBench
     }
 
     #[ParamProviders(['provideLimits'])]
-    public function benchReactPoolUsingHttpClient(array $params): void
+    public function benchReactWithHttpClient(array $params): void
     {
         PoolFactory::createFromClient(new ReactClient())
             ->send($this->createPsrRequests($params['limit']));

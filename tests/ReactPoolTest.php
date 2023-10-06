@@ -33,4 +33,11 @@ final class ReactPoolTest extends TestCase
     {
         $this->performConnectorTests($this->createConnector($this->createGuzzleClient()));
     }
+
+    public function test_react_pool_keyed_response(): void
+    {
+        $this->performKeyedResponseTests(
+            $this->mockSymfonyClient(new ReactDeferred())
+        );
+    }
 }

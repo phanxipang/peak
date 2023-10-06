@@ -23,6 +23,7 @@ final class ClientPool implements Pool
     public function send(iterable $requests): array
     {
         $promises = static function (AsyncClientInterface $client, iterable $requests) {
+            /** @var array-key $key */
             foreach ($requests as $key => $request) {
                 if ($request instanceof RequestInterface) {
                     yield $key => static fn (): ResponseInterface => $client->sendRequest($request);

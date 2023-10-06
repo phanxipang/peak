@@ -20,8 +20,10 @@ interface Pool
     /**
      * Send concurrent requests.
      *
-     * @param  iterable<TReq> $requests
-     * @return array<array-key, TRes>
+     * @template Tk of array-key
+     *
+     * @param  iterable<Tk, TReq> $requests
+     * @return array<Tk, TRes>
      */
     public function send(iterable $requests): array;
 }

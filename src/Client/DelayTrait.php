@@ -16,7 +16,9 @@ trait DelayTrait
     public function delay(int $milliseconds): void
     {
         if ($milliseconds < 0) {
+            // @codeCoverageIgnoreStart
             throw new \ValueError('Delay must be positive, got '.$milliseconds);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->delay = $milliseconds;

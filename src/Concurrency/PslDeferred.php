@@ -13,10 +13,13 @@ final class PslDeferred implements Deferrable
         $defer = new Async\Deferred();
 
         Async\Scheduler::defer(static function () use ($defer, $callback, $delay) {
-            $resolve = static fn (mixed $value) => $defer->complete($value);
-            $reject = static fn (\Throwable $e) => $defer->error($e);
-
-            Async\Scheduler::delay($delay, static fn () => $callback($resolve, $reject));
+            Async\Scheduler::delay($delay, static function () use ($defer, $callback) {
+                try {
+                    $defer->complete($callback());
+                } catch (\Throwable $e) {
+                    $defer->error($e);
+                }
+            });
         });
 
         return $defer->getAwaitable()->await();

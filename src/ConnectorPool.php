@@ -45,6 +45,7 @@ final class ConnectorPool implements Pool
     public function send(iterable $requests): array
     {
         $promises = static function (ConnectorInterface $connector, iterable $requests) {
+            /** @var array-key $key */
             foreach ($requests as $key => $request) {
                 if ($request instanceof Request) {
                     yield $key => static fn (): Response => $connector->send($request);
@@ -56,6 +57,8 @@ final class ConnectorPool implements Pool
             }
         };
 
-        return $this->createWorker($this->client)->run($promises($this->connector, $requests));
+        return $this->createWorker($this->client)->run(
+            $promises($this->connector, $requests)
+        );
     }
 }
