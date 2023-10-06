@@ -208,7 +208,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-codecov]: https://img.shields.io/codecov/c/github/phanxipang/peak?logo=codecov&style=for-the-badge
 [ico-downloads]: https://img.shields.io/packagist/dt/fansipan/peak.svg?style=for-the-badge
 
-[link-packagist]: https://packagist.org/packages/phanxipang/peak
+[link-packagist]: https://packagist.org/packages/fansipan/peak
 [link-gh-actions]: https://github.com/phanxipang/peak
 [link-codecov]: https://codecov.io/gh/phanxipang/peak
 [link-downloads]: https://packagist.org/packages/fansipan/peak
