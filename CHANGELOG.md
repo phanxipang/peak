@@ -20,3 +20,6 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ### Security
 - Nothing -->
+## 0.1.0 - 2023-11-05
+
+**Full Changelog**: https://github.com/phanxipang/peak/commits/0.1.0
