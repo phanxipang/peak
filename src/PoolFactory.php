@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak;
 
+use Fansipan\Contracts\ConnectorInterface;
 use Fansipan\Peak\Client\AsyncClientFactory;
 use Fansipan\Peak\Client\AsyncClientInterface;
-use Jenky\Atlas\Contracts\ConnectorInterface;
 use Psr\Http\Client\ClientInterface;
 
 class PoolFactory

@@ -7,10 +7,10 @@ namespace Fansipan\Peak\Tests;
 use Fansipan\Peak\Client\GuzzleClient;
 use Fansipan\Peak\Client\SymfonyClient;
 use Fansipan\Peak\Concurrency\Deferrable;
+use Fansipan\Util;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use Jenky\Atlas\Util;
 use Symfony\Component\HttpClient\MockHttpClient;
 
 trait TestTrait

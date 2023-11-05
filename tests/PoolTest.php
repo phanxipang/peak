@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Tests;
 
+use Fansipan\GenericConnector;
 use Fansipan\Peak\Client\AsyncClientFactory;
 use Fansipan\Peak\Client\GuzzleClient;
 use Fansipan\Peak\Client\ReactClient;
@@ -18,7 +19,6 @@ use Fansipan\Peak\PoolFactory;
 use Fansipan\Peak\PoolTrait;
 use GuzzleHttp\Client;
 use Http\Discovery\Psr17FactoryDiscovery;
-use Jenky\Atlas\GenericConnector;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Tests;
 
+use Fansipan\Contracts\ConnectorInterface;
+use Fansipan\GenericConnector;
+use Fansipan\Middleware\Interceptor;
 use Fansipan\Peak\Client\AsyncClientInterface;
 use Fansipan\Peak\ClientPool;
 use Fansipan\Peak\ConnectorPool;
 use Fansipan\Peak\PoolFactory;
+use Fansipan\Response;
 use Http\Discovery\Psr17FactoryDiscovery;
-use Jenky\Atlas\Contracts\ConnectorInterface;
-use Jenky\Atlas\GenericConnector;
-use Jenky\Atlas\Middleware\Interceptor;
-use Jenky\Atlas\Response;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;

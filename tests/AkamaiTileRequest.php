@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Tests;
 
-use Jenky\Atlas\Request;
+use Fansipan\Request;
 
 final class AkamaiTileRequest extends Request
 {

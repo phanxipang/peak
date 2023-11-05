@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak;
 
+use Fansipan\Contracts\ConnectorInterface;
 use Fansipan\Peak\Client\AsyncClientInterface;
 use Fansipan\Peak\Exception\InvalidPoolRequestException;
 use Fansipan\Peak\Exception\UnsupportedClientException;
-use Jenky\Atlas\Contracts\ConnectorInterface;
-use Jenky\Atlas\Request;
-use Jenky\Atlas\Response;
+use Fansipan\Request;
+use Fansipan\Response;
 
 if (! \interface_exists(ConnectorInterface::class)) {
     // @codeCoverageIgnoreStart

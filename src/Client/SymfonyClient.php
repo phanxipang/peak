@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Fansipan\Peak\Client;
 
+use Fansipan\Exception\NetworkException;
+use Fansipan\Exception\RequestException;
 use Fansipan\Peak\Concurrency\Deferrable;
 use Http\Discovery\Psr17FactoryDiscovery;
-use Jenky\Atlas\Exception\NetworkException;
-use Jenky\Atlas\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
