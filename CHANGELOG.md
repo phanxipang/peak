@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `atlas-pool` will be documented in this file.
+All notable changes to `peak` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
